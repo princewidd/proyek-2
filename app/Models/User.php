@@ -29,4 +29,19 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    public function pesananJokis()
+    {
+        return $this->hasMany(PesananJoki::class);
+    }
+
+    public function transaksiAkuns()
+    {
+        return $this->hasMany(TransaksiAkun::class);
+    }
+
+    public function chats()
+    {
+        return $this->hasMany(Chat::class, 'pelanggan_id');
+    }
 }
