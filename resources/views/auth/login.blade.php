@@ -9,7 +9,7 @@
 <body>
     <div class="login-page">
         <div class="left">
-            <img src="{{ asset('img/zeroshop-black.png') }}" alt="ZEROSHOP" class="logo">
+            <img src="{{ asset('img/zeroshopCoba.png') }}" alt="ZEROSHOP" class="logo">
         </div>
         <div class="divider"></div>
         <div class="right">

@@ -6,34 +6,52 @@ body {
 }
 
 .login-page {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
-    justify-content: center;
-    gap: 40px;
     min-height: 100vh;
-    padding: 24px;
+    padding: 24px 60px;
     box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
 }
 
 .left {
-    flex: 0 0 500px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 0;
 }
 
 .logo {
     width: 100%;
+    max-width: 500px;
     aspect-ratio: 1;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .divider {
     width: 1px;
+    height: 777px;
     align-self: stretch;
     background: #e5e7eb;
-    margin: 32px 0;
+    margin:0 40px;
 }
 
 .right {
-    width: 340px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding-left: 40px;
+}
+
+.right form, 
+.right .brand, 
+.right .signup-text {
+    width: 100%;
+    max-width: 360px;
 }
 
 .brand {
@@ -124,6 +142,11 @@ form input:focus {
 }
 
 @media (max-width: 720px) {
-    .left, .divider { display: none; }
-    .right { width: 100%; max-width: 360px; }
+    .left, .divider { 
+        display: none; 
+    }
+    .right { 
+        width: 100%; 
+        max-width: 360px; 
+    }
 }
