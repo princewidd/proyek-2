@@ -1,52 +1,117 @@
-<x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
-        @csrf
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join - ZeroShop</title>
+    <link rel="icon" type="image/png" href="{{ asset('img/icon.png') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/auth.css') }}">
+</head>
+<body>
 
-        <!-- Name -->
-        <div>
-            <x-input-label for="name" :value="__('Name')" />
-            <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            <x-input-error :messages="$errors->get('name')" class="mt-2" />
+    <div class="login-page">
+        <div class="left">
+            <img src="{{ asset('img/logoLR.png') }}" alt="ZeroShop Logo" class="logo">
+            <h1 class="logo-title">ZEROSHOP</h1>
+            <p class="logo-subtitle">Game Boosting & Account Store</p>
         </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        <div class="divider"></div>
+
+        <div class="right">
+            <h1 class="brand">ZEROSHOP</h1>
+
+            <div class="signup-text">
+                Already have a account? 
+                <a href="{{ route('login') }}" class="login-btn">Log in</a>
+            </div>
+
+            <h2 class="welcome">Join ZeroShop</h2>
+
+            @if ($errors->any())
+                <div class="error">
+                    {{ $errors->first() }}
+                </div>
+            @endif
+
+            <form action="{{ route('register') }}" method="POST" id="registerForm">
+                @csrf
+
+                <div id="step-1">
+            <div class="input-group">
+                <input type="email" name="email" id="email" placeholder="Email" value="{{ old('email') }}" required autocomplete="email">
+            </div>
+
+            <div class="input-group">
+                <input type="text" name="username" id="username" placeholder="Username" value="{{ old('username') }}" required autocomplete="off">
+            </div>
+
+                    <div class="row">
+                        <button type="button" class="btn-submit" onclick="nextStep()">Continue ></button>
+                    </div>
+                </div>
+            
+                <div id="step-2" style="display: none;">
+                    <div class="input-group">
+                        <input type="password" name="password" id="password" placeholder="Password" required autocomplete="new-password">
+                    </div>
+                
+                    <div class="input-group">
+                        <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirm Password" required autocomplete="new-password">
+                    </div>
+                
+                    <div class="checkbox-row">
+                        <label class="checkbox-container">
+                            <input type="checkbox" name="subscribe">
+                            <span>Subscribe for promo codes, special deals & free extras</span>
+                        </label>
+                    </div>
+                
+                    <div class="row" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                        <button type="button" class="btn-back" onclick="prevStep()">&lt; Back</button>
+                        <button type="submit" class="btn-submit">Create account</button>
+                    </div>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
+    <script>
+        function nextStep() {
+            const step1 = document.getElementById('step-1');
+            const step2 = document.getElementById('step-2');
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
+            const emailInput = document.getElementById('email');
+            const usernameInput = document.getElementById('username');
 
-            <x-input-error :messages="$errors->get('password')" class="mt-2" />
-        </div>
+            if (!emailInput.reportValidity()) {
+                return;
+            }
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
+            if (!usernameInput.reportValidity()) {
+                return;
+            }
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
+            step1.style.display = 'none';
+            step2.style.display = 'block';
+            step2.classList.remove('fade-in');
+            void step2.offsetWidth;
+            step2.classList.add('fade-in');
+        }
 
-            <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
-        </div>
+        function prevStep() {
+            const step1 = document.getElementById('step-1');
+            const step2 = document.getElementById('step-2');
 
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
-            </x-primary-button>
-        </div>
-    </form>
-</x-guest-layout>
+            step2.style.display = 'none';
+            step1.style.display = 'block';
+            step1.classList.remove('fade-in');
+            void step1.offsetWidth;
+            step1.classList.add('fade-in');
+        }
+    </script>
+</body>
+</html>

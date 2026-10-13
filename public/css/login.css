@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0;
     font-family: 'Poppins', Helvetica, sans-serif;
@@ -11,7 +15,6 @@ body {
     align-items: center;
     min-height: 100vh;
     padding: 24px 60px;
-    box-sizing: border-box;
     width: 100%;
     max-width: 100%;
     margin: 0 auto;
@@ -32,10 +35,9 @@ body {
 }
 
 .divider {
-    width: 1px;
+    width: 2px;
     height: 777px;
-    align-self: stretch;
-    background: #e5e7eb;
+    background: #000000;
     margin:0 40px;
 }
 
@@ -49,38 +51,43 @@ body {
 
 .right form, 
 .right .brand, 
-.right .signup-text {
+.right .signup-text,
+.right .welcome {
     width: 100%;
     max-width: 360px;
 }
 
 .brand {
-    font-size: 28px;
-    font-weight: 400;
-    margin: 0 0 16px;
+    font-size: 42px;
+    font-weight: 700;
+    margin: 0 0 12px;
     letter-spacing: 1px;
 }
 
 .signup-text {
-    font-size: 12px;
-    margin: 0 0 28px;
+    font-size: 14px;
+    margin: 0 0 36px;
+    color: #333333;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .signup-btn {
     display: inline-block;
-    background: #0f172a;
-    color: #e5e7eb;
-    padding: 4px 14px;
+    background: #e5e7eb;
+    color: #0f172a;
+    padding: 4px 16px;
     border-radius: 6px;
     text-decoration: none;
-    font-size: 11px;
-    margin-left: 8px;
+    font-size: 13px;
+    font-weight: 400;
 }
 
 .welcome {
-    font-size: 18px;
-    font-weight: 400;
-    margin: 0 0 20px;
+    font-size: 32px;
+    font-weight: 500;
+    margin: 0 0 24px;
 }
 
 form label {
