@@ -37,7 +37,18 @@
                 </div>
             @endif
 
-            <form action="{{ route('register') }}" method="POST" id="registerForm">
+            @if ($errors->any())
+
+    <div style="color: red;">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+            <form method="POST" action="{{ route('register') }}">
                 @csrf
 
                 <div id="step-1">
