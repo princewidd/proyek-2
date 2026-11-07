@@ -56,23 +56,23 @@
 
     <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
         <div class="relative rounded-2xl overflow-hidden bg-[#1e2a44]">
-            <img src="{{ asset('img/beranda/zenless-zone-zero-grup-1.png') }}" alt="Promo"
+            <img src="{{ asset('img/beranda/animasi top 3.png') }}" alt="Promo"
                 class="w-full h-auto block">
         </div>
     </section>
 
     @php
         $games = [
-            ['name' => 'Genshin Impact', 'img' => 'image-8.png'],
-            ['name' => 'Valorant', 'img' => 'image-9.png'],
-            ['name' => 'Solo Leveling: Arise', 'img' => 'image-9-2.png'],
-            ['name' => 'Seven Knights Re:BIRTH', 'img' => '3735642-1-2.png'],
-            ['name' => 'Wuthering Waves', 'img' => 'image-2.png'],
-            ['name' => 'Neverness to Everness', 'img' => '26698325-1.png'],
+            ['name' => 'Genshin Impact', 'img' => 'gensin inpak.png'],
+            ['name' => 'Valorant', 'img' => 'valo.png'],
+            ['name' => 'Solo Leveling: Arise', 'img' => 'solo.png'],
+            ['name' => 'Seven Knights Re:BIRTH', 'img' => 'seven1.png'],
+            ['name' => 'Wuthering Waves', 'img' => 'waves.png'],
+            ['name' => 'Neverness to Everness', 'img' => 'nte.png'],
             ['name' => 'Roblox', 'img' => 'image-10.png'],
-            ['name' => 'Aniimo', 'img' => 'image.png'],
-            ['name' => 'Zenless Zone Zero', 'img' => 'image-25.png'],
-            ['name' => 'Persona 5: The Phantom X', 'img' => '3735642-1.png'],
+            ['name' => 'Aniimo', 'img' => 'animo.png'],
+            ['name' => 'Zenless Zone Zero', 'img' => 'zenles.png'],
+            ['name' => 'Persona 5: The Phantom X', 'img' => 'pesona.png'],
         ];
     @endphp
 
