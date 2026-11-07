@@ -169,8 +169,14 @@ form input::placeholder {
     font-size: 13px;
 }
 
+/* Tambahan penyesuaian khusus Register */
 .checkbox-row {
-    margin: 12px 0 24px;
+    margin: 8px 0 16px;
+}
+
+.checkbox-text {
+    font-size: 11px;
+    color: #64748b;
 }
 
 a.forgot,

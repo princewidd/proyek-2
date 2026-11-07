@@ -1,4 +1,7 @@
 <x-guest-layout>
+    <h2 class="text-3xl text-gray-900 mb-6 text-center" style="font-weight: 900;">
+        Forgot Password
+    </h2>
     <div class="mb-4 text-sm text-gray-600">
         {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
     </div>
@@ -16,7 +19,11 @@
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
+        <div class="flex items-center justify-between mt-6">
+            <a href="{{ route('login') }}" class="text-sm font-semibold text-gray-600 hover:text-gray-900 no-underline transition">
+                 Kembali ke Login
+            </a>
+
             <x-primary-button>
                 {{ __('Email Password Reset Link') }}
             </x-primary-button>
