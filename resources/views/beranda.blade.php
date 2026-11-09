@@ -19,14 +19,14 @@
                     <span class="text-white font-bold text-lg tracking-wide">ZERO SHOP</span>
                 </a>
 
-                <div class="hidden sm:block flex-1 max-w-md">
+                <form action="{{ route('beranda') }}" method="GET" class="hidden sm:block flex-1 max-w-md">
                     <div class="relative">
                         <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                         </svg>
-                        <input type="text" placeholder="Cari game..." class="w-full rounded-full bg-white/10 text-white placeholder-white/60 pl-10 pr-4 py-2 text-sm border-0 focus:ring-2 focus:ring-white/40">
+                        <input type="text" name="search" value="{{ $search }}" placeholder="Cari game..." class="w-full rounded-full bg-white/10 text-white placeholder-white/60 pl-10 pr-4 py-2 text-sm border-0 focus:ring-2 focus:ring-white/40">
                     </div>
-                </div>
+                </form>
 
                 <div class="flex items-center gap-3">
                     @auth
@@ -45,14 +45,14 @@
                 </div>
             </div>
 
-            <div class="sm:hidden pb-3">
+            <form action="{{ route('beranda') }}" method="GET" class="sm:hidden pb-3">
                 <div class="relative">
                     <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                     </svg>
-                    <input type="text" placeholder="Cari game..." class="w-full rounded-full bg-white/10 text-white placeholder-white/60 pl-10 pr-4 py-2 text-sm border-0 focus:ring-2 focus:ring-white/40">
+                    <input type="text" name="search" value="{{ $search }}" placeholder="Cari game..." class="w-full rounded-full bg-white/10 text-white placeholder-white/60 pl-10 pr-4 py-2 text-sm border-0 focus:ring-2 focus:ring-white/40">
                 </div>
-            </div>
+            </form>
         </div>
     </header>
 
@@ -120,24 +120,10 @@
             </div>
         </section>
 
-        @php
-            $games = [
-                ['name' => 'Genshin Impact', 'img' => 'gensin inpak.png'],
-                ['name' => 'Valorant', 'img' => 'valo.png'],
-                ['name' => 'Solo Leveling: Arise', 'img' => 'solo.png'],
-                ['name' => 'Seven Knights Re:BIRTH', 'img' => 'seven1.png'],
-                ['name' => 'Wuthering Waves', 'img' => 'waves.png'],
-                ['name' => 'Neverness to Everness', 'img' => 'nte.png'],
-                ['name' => 'Roblox', 'img' => 'image-10.png'],
-                ['name' => 'Aniimo', 'img' => 'animo.png'],
-                ['name' => 'Zenless Zone Zero', 'img' => 'zenles.png'],
-                ['name' => 'Persona 5: The Phantom X', 'img' => 'pesona.png'],
-            ];
-        @endphp
-
-        <!-- GRID PILIH GAME -->
         <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <h2 class="text-lg sm:text-xl font-semibold mb-4 text-gray-900">Pilih Game</h2>
+            <h2 class="text-lg sm:text-xl font-semibold mb-4 text-gray-900">
+                @if($search !== '') Hasil pencarian: "{{ $search }}" @else Pilih Game @endif
+            </h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 @foreach ($games as $game)
                     <a href="#" class="group rounded-xl overflow-hidden bg-[#1e2a44] shadow hover:shadow-lg transition duration-200">
@@ -150,6 +136,12 @@
                         </div>
                     </a>
                 @endforeach
+                @if (count($games) === 0)
+                    <div class="col-span-full text-center py-12 text-gray-500">
+                        <p class="text-base font-medium">Game tidak ditemukan</p>
+                        <a href="{{ route('beranda') }}" class="mt-2 inline-block text-sm text-[#1e2a44] underline">Reset pencarian</a>
+                    </div>
+                @endif
             </div>
         </section>
 

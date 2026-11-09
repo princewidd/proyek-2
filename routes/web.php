@@ -1,10 +1,11 @@
 <?php
-
+use App\Http\Controllers\GameController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RegisterUserController;
+
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'beranda')->name('beranda');
+Route::get('/', [GameController::class, 'index'])->name('beranda');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
