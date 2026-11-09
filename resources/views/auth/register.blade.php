@@ -34,16 +34,16 @@
                 <!-- Username Input dengan Stroke -->
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Username</label>
-                    <input id="name" type="text" name="name" :value="old('name')" required autofocus autocomplete="name"
+                    <input id="username" type="text" name="username" :value="old('username')" required autofocus autocomplete="username"
                         placeholder="Username"
                         class="w-full px-4 py-2.5 bg-[#f3f4f6] border border-gray-300 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-600 focus:bg-white focus:ring-1 focus:ring-gray-600 transition">
-                    <x-input-error :messages="$errors->get('name')" class="mt-1" />
+                    <x-input-error :messages="$errors->get('username')" class="mt-1" />
                 </div>
 
                 <!-- Email Input dengan Stroke -->
                 <div>
                     <label class="block text-xs font-semibold text-gray-700 mb-1">Email</label>
-                    <input id="email" type="email" name="email" :value="old('email')" required autocomplete="username"
+                    <input id="email" type="email" name="email" :value="old('email')" required autocomplete="email"
                         placeholder="email@domain.com"
                         class="w-full px-4 py-2.5 bg-[#f3f4f6] border border-gray-300 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:border-gray-600 focus:bg-white focus:ring-1 focus:ring-gray-600 transition">
                     <x-input-error :messages="$errors->get('email')" class="mt-1" />

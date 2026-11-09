@@ -19,6 +19,11 @@ class GameController extends Controller
         ['name' => 'Persona 5: The Phantom X', 'img' => 'pesona.png'],
     ];
 
+    public static function games(): array
+    {
+        return self::GAMES;
+    }
+
     public function index(Request $request)
     {
         $search = trim((string) $request->query('search'));

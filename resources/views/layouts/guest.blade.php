@@ -16,7 +16,7 @@
         
         <!-- Render Tampilan Beranda (Ukuran Skala Normal 100%, Tanpa Scale/Zoom) -->
         <div class="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-            @include('beranda')
+            @include('beranda', ['search' => '', 'games' => \App\Http\Controllers\GameController::games()])
         </div>
 
         <!-- Overlay Gelap + Blur Kaca Transparan -->
