@@ -86,7 +86,7 @@
                     
                     <!-- Foto 1 -->
                     <div class="w-full shrink-0">
-                        <img src="{{ asset('img/beranda/animasi top 3.png') }}" alt="Promo 1" class="w-full h-auto block object-cover">
+                        <img src="{{ asset('img/beranda/banner1.png') }}" alt="Promo 1" class="w-full h-auto block object-cover">
                     </div>
 
                     <!-- Foto 2 (Sesuaikan nama file gambar ke-2 kamu) -->
