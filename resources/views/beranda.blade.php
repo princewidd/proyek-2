@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="h-full">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,8 +8,10 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans bg-gray-100 text-gray-900 antialiased">
-    <header class="bg-[#1e2a44] sticky top-0 z-30 shadow-sm">
+<body class="font-sans bg-gray-100 text-gray-900 antialiased h-full flex flex-col">
+
+    <!-- NAVBAR HEADER -->
+    <header class="bg-[#1e2a44] sticky top-0 z-30 shadow-sm shrink-0">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16 gap-4">
                 <a href="{{ route('beranda') }}" class="flex items-center gap-2 shrink-0">
@@ -54,49 +56,111 @@
         </div>
     </header>
 
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-        <div class="relative rounded-2xl overflow-hidden bg-[#1e2a44]">
-            <img src="{{ asset('img/beranda/animasi top 3.png') }}" alt="Promo"
-                class="w-full h-auto block">
-        </div>
-    </section>
-
-    @php
-        $games = [
-            ['name' => 'Genshin Impact', 'img' => 'gensin inpak.png'],
-            ['name' => 'Valorant', 'img' => 'valo.png'],
-            ['name' => 'Solo Leveling: Arise', 'img' => 'solo.png'],
-            ['name' => 'Seven Knights Re:BIRTH', 'img' => 'seven1.png'],
-            ['name' => 'Wuthering Waves', 'img' => 'waves.png'],
-            ['name' => 'Neverness to Everness', 'img' => 'nte.png'],
-            ['name' => 'Roblox', 'img' => 'image-10.png'],
-            ['name' => 'Aniimo', 'img' => 'animo.png'],
-            ['name' => 'Zenless Zone Zero', 'img' => 'zenles.png'],
-            ['name' => 'Persona 5: The Phantom X', 'img' => 'pesona.png'],
-        ];
-    @endphp
-
-    <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h2 class="text-lg sm:text-xl font-semibold mb-4">Pilih Game</h2>
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
-            @foreach ($games as $game)
-                <a href="#" class="group rounded-xl overflow-hidden bg-[#1e2a44] shadow hover:shadow-lg transition duration-200">
-                    <div class="aspect-video overflow-hidden">
-                        <img src="{{ asset('img/beranda/' . $game['img']) }}" alt="{{ $game['name'] }}"
-                            class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+    <!-- KONTEN UTAMA -->
+    <main class="flex-1 bg-gray-100">
+        
+        <!-- CAROUSEL BANNER PROMO -->
+        <!-- CAROUSEL BANNER PROMO (Slide Geser ke Kiri) -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+            <div x-data="{ 
+                    activeSlide: 0, 
+                    totalSlides: 3,
+                    timer: null,
+                    init() {
+                        this.timer = setInterval(() => {
+                            this.next();
+                        }, 4000); // Berganti tiap 4 detik
+                    },
+                    next() {
+                        this.activeSlide = (this.activeSlide + 1) % this.totalSlides;
+                    },
+                    prev() {
+                        this.activeSlide = (this.activeSlide - 1 + this.totalSlides) % this.totalSlides;
+                    }
+                }" 
+                class="relative rounded-2xl overflow-hidden bg-[#1e2a44] shadow-md group">
+                
+                <!-- Track Pembungkus Gambar (Menggeser ke Kiri) -->
+                <div class="flex transition-transform duration-700 ease-in-out"
+                    :style="'transform: translateX(-' + (activeSlide * 100) + '%);'">
+                    
+                    <!-- Foto 1 -->
+                    <div class="w-full shrink-0">
+                        <img src="{{ asset('img/beranda/animasi top 3.png') }}" alt="Promo 1" class="w-full h-auto block object-cover">
                     </div>
-                    <div class="px-2 py-2">
-                        <span class="block text-center text-white text-xs sm:text-sm font-medium truncate">{{ $game['name'] }}</span>
-                    </div>
-                </a>
-            @endforeach
-        </div>
-    </section>
 
-    <footer class="bg-[#1e2a44] mt-8">
+                    <!-- Foto 2 (Sesuaikan nama file gambar ke-2 kamu) -->
+                    <div class="w-full shrink-0">
+                        <img src="{{ asset('img/beranda/banner2.png') }}" alt="Promo 2" class="w-full h-auto block object-cover">
+                    </div>
+
+                    <!-- Foto 3 (Sesuaikan nama file gambar ke-3 kamu) -->
+                    <div class="w-full shrink-0">
+                        <img src="{{ asset('img/beranda/banner3.png') }}" alt="Promo 3" class="w-full h-auto block object-cover">
+                    </div>
+
+                </div>
+
+                <!-- Tombol Navigasi Kiri & Kanan -->
+                <button @click="prev()" 
+                        class="absolute left-3 top-1/2 -translate-y-1/2 p-2 bg-black/40 hover:bg-black/70 text-white rounded-full transition opacity-0 group-hover:opacity-100 z-10">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                </button>
+                <button @click="next()" 
+                        class="absolute right-3 top-1/2 -translate-y-1/2 p-2 bg-black/40 hover:bg-black/70 text-white rounded-full transition opacity-0 group-hover:opacity-100 z-10">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                </button>
+
+                <!-- Indicator Dots Bawah -->
+                <div class="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+                    <button @click="activeSlide = 0" :class="activeSlide === 0 ? 'bg-white w-6' : 'bg-white/50 w-2'" class="h-2 rounded-full transition-all duration-300"></button>
+                    <button @click="activeSlide = 1" :class="activeSlide === 1 ? 'bg-white w-6' : 'bg-white/50 w-2'" class="h-2 rounded-full transition-all duration-300"></button>
+                    <button @click="activeSlide = 2" :class="activeSlide === 2 ? 'bg-white w-6' : 'bg-white/50 w-2'" class="h-2 rounded-full transition-all duration-300"></button>
+                </div>
+            </div>
+        </section>
+
+        @php
+            $games = [
+                ['name' => 'Genshin Impact', 'img' => 'gensin inpak.png'],
+                ['name' => 'Valorant', 'img' => 'valo.png'],
+                ['name' => 'Solo Leveling: Arise', 'img' => 'solo.png'],
+                ['name' => 'Seven Knights Re:BIRTH', 'img' => 'seven1.png'],
+                ['name' => 'Wuthering Waves', 'img' => 'waves.png'],
+                ['name' => 'Neverness to Everness', 'img' => 'nte.png'],
+                ['name' => 'Roblox', 'img' => 'image-10.png'],
+                ['name' => 'Aniimo', 'img' => 'animo.png'],
+                ['name' => 'Zenless Zone Zero', 'img' => 'zenles.png'],
+                ['name' => 'Persona 5: The Phantom X', 'img' => 'pesona.png'],
+            ];
+        @endphp
+
+        <!-- GRID PILIH GAME -->
+        <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <h2 class="text-lg sm:text-xl font-semibold mb-4 text-gray-900">Pilih Game</h2>
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                @foreach ($games as $game)
+                    <a href="#" class="group rounded-xl overflow-hidden bg-[#1e2a44] shadow hover:shadow-lg transition duration-200">
+                        <div class="aspect-video overflow-hidden">
+                            <img src="{{ asset('img/beranda/' . $game['img']) }}" alt="{{ $game['name'] }}"
+                                class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                        </div>
+                        <div class="px-2 py-2">
+                            <span class="block text-center text-white text-xs sm:text-sm font-medium truncate">{{ $game['name'] }}</span>
+                        </div>
+                    </a>
+                @endforeach
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-[#1e2a44] shrink-0 mt-auto">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 text-center text-white/70 text-sm">
             &copy; {{ date('Y') }} ZERO SHOP. Semua hak dilindungi.
         </div>
     </footer>
+
 </body>
 </html>
