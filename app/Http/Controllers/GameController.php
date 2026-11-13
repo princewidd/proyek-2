@@ -56,4 +56,44 @@ class GameController extends Controller
             'kategorijoki' => PaketJoki::KATEGORI,
         ]);
     }
+
+    public function showAkun(string $slug, string $akun)
+    {
+        $game = collect(self::GAMES)->first(fn(array $g) => Str::slug($g['name']) === $slug);
+        abort_unless($game !== null, 404);
+
+        $akunGame = AkunGame::where('game', $game['name'])
+            ->where('status', 'tersedia')
+            ->findOrFail((int) $akun);
+
+        return view('akun', [
+            'game' => $game,
+            'slug' => $slug,
+            'akunGame' => $akunGame,
+            'kategorijoki' => PaketJoki::KATEGORI,
+        ]);
+    }
+
+    public function showJoki(string $slug, string $kategori = null)
+    {
+        $game = collect(self::GAMES)->first(fn(array $g) => Str::slug($g['name']) === $slug);
+        abort_unless($game !== null, 404);
+
+        if ($kategori !== null && ! isset(PaketJoki::KATEGORI[$kategori])) {
+            abort(404);
+        }
+
+        $paket = PaketJoki::where('game', $game['name'])
+            ->when($kategori !== null, fn($q) => $q->where('kategori', $kategori))
+            ->orderBy('harga')
+            ->get();
+
+        return view('joki', [
+            'game' => $game,
+            'slug' => $slug,
+            'kategori' => $kategori,
+            'labelKategori' => $kategori !== null ? PaketJoki::KATEGORI[$kategori] : null,
+            'paket' => $paket,
+        ]);
+    }
 }

@@ -181,7 +181,7 @@
 
                 <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                     @foreach ($akun as $a)
-                        <div class="group rounded-lg overflow-hidden bg-[#1e2a44] shadow hover:shadow-lg transition duration-200 flex flex-col">
+                        <a href="{{ route('game.akun.show', ['slug' => $slug, 'akun' => $a->id]) }}" class="group rounded-lg overflow-hidden bg-[#1e2a44] shadow hover:shadow-lg transition duration-200 flex flex-col">
                             <div class="aspect-video overflow-hidden bg-[#2a3a5c]">
                                 @if ($a->gambar)
                                     <img src="{{ asset($a->gambar) }}" alt="{{ $a->judul }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
@@ -193,7 +193,7 @@
                                 <p class="text-white text-[11px] sm:text-xs font-medium line-clamp-2 flex-1">{{ $a->judul }}</p>
                                 <span class="text-white text-xs sm:text-sm font-semibold">Rp {{ number_format($a->harga, 0, ',', '.') }}</span>
                             </div>
-                        </div>
+                        </a>
                     @endforeach
 
                     @if (count($akun) === 0)
@@ -240,7 +240,7 @@
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             @forelse ($paket->where('kategori', $key) as $p)
-                                <div class="rounded-lg overflow-hidden bg-[#1e2a44] shadow hover:shadow-lg transition duration-200 flex flex-col">
+                                <a href="{{ route('game.joki.show', ['slug' => $slug, 'kategori' => $key]) }}" class="rounded-lg overflow-hidden bg-[#1e2a44] shadow hover:shadow-lg transition duration-200 flex flex-col">
                                     <div class="p-4 flex flex-col gap-2 flex-1">
                                         <div class="flex items-start justify-between gap-3">
                                             <p class="text-white text-sm font-semibold">{{ $p->nama_paket }}</p>
@@ -251,7 +251,7 @@
                                         @endif
                                         <p class="text-white/70 text-xs leading-relaxed flex-1">{{ $p->deskripsi }}</p>
                                     </div>
-                                </div>
+                                </a>
                             @empty
                                 <div class="col-span-full rounded-lg border border-dashed border-gray-300 p-10 text-center text-sm text-gray-500">
                                     Belum ada paket {{ $label }} untuk {{ $game['name'] }}.

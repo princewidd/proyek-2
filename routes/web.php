@@ -10,6 +10,10 @@ Route::get('/', [GameController::class, 'index'])->name('beranda');
 
 Route::get('/game/{slug}', [GameController::class, 'show'])->name('game.show');
 
+Route::get('/game/{slug}/account/{akun}', [GameController::class, 'showAkun'])->name('game.akun.show');
+
+Route::get('/game/{slug}/joki/{kategori?}', [GameController::class, 'showJoki'])->name('game.joki.show');
+
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('dashboard');
