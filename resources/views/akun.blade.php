@@ -8,7 +8,7 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans bg-white text-gray-900 antialiased h-full flex flex-col">
+<body class="font-sans bg-white text-gray-900 antialiased h-full flex flex-col" x-data="{ pay: false }">
 
     <!-- NAVBAR HEADER -->
     <header class="bg-[#1e2a44] sticky top-0 z-30 shadow-sm shrink-0">
@@ -183,7 +183,7 @@
                         @guest
                             <a href="{{ route('login') }}" class="w-full max-w-[260px] h-11 grid place-items-center rounded-md bg-white text-gray-900 text-base sm:text-xl font-medium hover:bg-gray-200 transition">Beli Sekarang</a>
                         @else
-                            <button type="button" class="w-full max-w-[260px] h-11 grid place-items-center rounded-md bg-white text-gray-900 text-base sm:text-xl font-medium hover:bg-gray-200 transition">Beli Sekarang</button>
+                            <button type="button" @click="pay = true" class="w-full max-w-[260px] h-11 grid place-items-center rounded-md bg-white text-gray-900 text-base sm:text-xl font-medium hover:bg-gray-200 transition">Beli Sekarang</button>
                         @endguest
                     </div>
                 </aside>
@@ -198,6 +198,85 @@
             &copy; {{ date('Y') }} ZERO SHOP. Semua hak dilindungi.
         </div>
     </footer>
+
+    <!-- MODAL PEMBAYARAN -->
+    <div x-show="pay" x-cloak class="fixed inset-0 z-50 grid place-items-center p-4" role="dialog" aria-modal="true">
+        <div class="absolute inset-0 bg-black/50" @click="pay = false"></div>
+
+        <form method="POST" action="{{ route('beli.akun.store', $akunGame) }}"
+              x-show="pay" x-transition.scale.origin.center.duration.200ms
+              class="relative w-full max-w-2xl max-h-[calc(100vh-32px)] overflow-auto bg-[#1e2a44] text-white border border-white rounded-lg">
+
+            @csrf
+            <!-- HEADER -->
+            <header class="flex items-center gap-4 px-5 sm:px-7 py-4 border-b-[3px] border-white">
+                <img src="{{ asset('img/beranda/zeroshop-white-49a3bd4-1.png') }}" alt="ZeroShop" class="w-11 h-11 rounded-lg object-cover shrink-0">
+                <h2 class="text-xl sm:text-2xl font-medium">ZeroShop</h2>
+                <button type="button" @click="pay = false" aria-label="Tutup" class="ml-auto w-10 h-10 text-3xl leading-none rounded-md hover:bg-white/10 transition">&times;</button>
+            </header>
+
+            <!-- BODY -->
+            <div class="px-5 sm:px-9 py-5 space-y-4">
+                <!-- PRODUK -->
+                <div class="flex flex-col sm:flex-row items-start gap-4 sm:gap-7 border border-white rounded-xl p-4">
+                    <div class="w-full sm:w-48 h-28 shrink-0 rounded bg-[#172038] overflow-hidden">
+                        @if ($akunGame->gambar)
+                            <img src="{{ asset($akunGame->gambar) }}" alt="" class="w-full h-full object-cover">
+                        @endif
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="mt-1 text-base sm:text-xl font-medium leading-snug">{{ $akunGame->judul }}</p>
+                        <p class="mt-3 text-base sm:text-xl font-medium">Rp {{ number_format($akunGame->harga, 0, ',', '.') }}</p>
+                    </div>
+                </div>
+
+                <!-- RINGKASAN -->
+                <section class="border border-white rounded-xl px-5 sm:px-8 py-2">
+                    <h3 class="text-lg sm:text-xl font-medium">Order Summary</h3>
+                    <dl class="mt-1">
+                        <div class="flex justify-between items-center py-2.5 text-base sm:text-xl">
+                            <dt class="text-[#9aa1b2]">Item price</dt>
+                            <dd class="font-medium">Rp {{ number_format($akunGame->harga, 0, ',', '.') }}</dd>
+                        </div>
+                        <div class="flex justify-between items-center py-2.5 text-base sm:text-xl border-t border-white/45">
+                            <dt class="text-[#9aa1b2]">Discount</dt>
+                            <dd class="font-medium">Rp 0</dd>
+                        </div>
+                        <div class="flex justify-between items-center py-2.5 text-base sm:text-xl border-t border-white/45">
+                            <dt class="text-[#9aa1b2]">Subtotal</dt>
+                            <dd class="font-medium text-[#f5a742]">Rp {{ number_format($akunGame->harga, 0, ',', '.') }}</dd>
+                        </div>
+                    </dl>
+                </section>
+
+                <!-- METODE BAYAR -->
+                <fieldset class="pl-1">
+                    <legend class="text-lg sm:text-xl font-medium">Payment Method</legend>
+                    <div class="flex flex-wrap gap-3 sm:gap-6 mt-4">
+                        <label class="relative flex items-center justify-center gap-5 sm:gap-8 w-full sm:w-56 h-12 border border-white rounded-md text-lg sm:text-xl font-medium cursor-pointer transition has-[:checked]:bg-white has-[:checked]:text-[#1e2a44] has-[:checked]:shadow-lg">
+                            <input type="radio" name="metode" value="qris" class="absolute opacity-0 pointer-events-none" required>
+                            <svg class="w-7 h-7" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.4" aria-hidden="true">
+                                <path d="M3 10V4h6M23 4h6v6M29 22v6h-6M9 28H3v-6"/>
+                                <rect x="9" y="9" width="5" height="5"/><rect x="18" y="9" width="5" height="5"/>
+                                <rect x="9" y="18" width="5" height="5"/><path d="M18 18h5v5"/>
+                            </svg>
+                            <span>QRIS</span>
+                        </label>
+                        <label class="relative flex items-center justify-center gap-5 sm:gap-8 w-full sm:w-56 h-12 border border-white rounded-md text-lg sm:text-xl font-medium cursor-pointer transition has-[:checked]:bg-white has-[:checked]:text-[#1e2a44] has-[:checked]:shadow-lg">
+                            <input type="radio" name="metode" value="bank" class="absolute opacity-0 pointer-events-none" checked>
+                            <svg class="w-7 h-7" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+                                <path d="M16 3 3 10v3h26v-3zM6 15h4v9H6zM14 15h4v9h-4zM22 15h4v9h-4zM3 26h26v3H3z"/>
+                            </svg>
+                            <span>Bank Transfer</span>
+                        </label>
+                    </div>
+                </fieldset>
+
+                <!-- PAY NOW -->
+                <button type="submit" class="block w-full h-12 sm:h-13 mt-2 bg-white text-[#1e2a44] text-xl sm:text-2xl font-bold rounded-full hover:bg-gray-200 transition">Pay Now</button>
+            </div>
+        </form>
+    </div>
 
 </body>
 </html>

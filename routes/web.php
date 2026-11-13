@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\BeliController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\ProfileController;
@@ -13,6 +14,12 @@ Route::get('/game/{slug}', [GameController::class, 'show'])->name('game.show');
 Route::get('/game/{slug}/account/{akun}', [GameController::class, 'showAkun'])->name('game.akun.show');
 
 Route::get('/game/{slug}/joki/{kategori?}', [GameController::class, 'showJoki'])->name('game.joki.show');
+
+Route::middleware('auth')->group(function () {
+    Route::post('/beli/{akunGame}', [BeliController::class, 'store'])->name('beli.akun.store');
+    Route::post('/joki-beli', [BeliController::class, 'storeJoki'])->name('beli.joki.store');
+    Route::get('/pembayaran/{pembayaran}', [BeliController::class, 'show'])->name('pembayaran.show');
+});
 
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified', 'admin'])
