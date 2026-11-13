@@ -131,7 +131,7 @@
             </h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
                 @foreach ($games as $game)
-                    <a href="#" class="group rounded-xl overflow-hidden bg-[#1e2a44] shadow hover:shadow-lg transition duration-200">
+                    <a href="{{ route('game.show', \Illuminate\Support\Str::slug($game['name'])) }}" class="group rounded-xl overflow-hidden bg-[#1e2a44] shadow hover:shadow-lg transition duration-200">
                         <div class="aspect-video overflow-hidden">
                             <img src="{{ asset('img/beranda/' . $game['img']) }}" alt="{{ $game['name'] }}"
                                 class="w-full h-full object-cover group-hover:scale-105 transition duration-300">

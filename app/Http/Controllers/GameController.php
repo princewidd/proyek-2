@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AkunGame;
+use App\Models\PaketJoki;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class GameController extends Controller
 {
@@ -36,5 +39,21 @@ class GameController extends Controller
             ));
 
         return view('beranda', ['games' => $games, 'search' => $search]);
+    }
+
+    public function show(string $slug)
+    {
+        $game = collect(self::GAMES)->first(fn(array $g) => Str::slug($g['name']) === $slug);
+        abort_unless($game !== null, 404);
+
+        $name = $game['name'];
+
+        return view('game', [
+            'game' => $game,
+            'slug' => $slug,
+            'akun' => AkunGame::where('game', $name)->where('status', 'tersedia')->latest()->get(),
+            'paket' => PaketJoki::where('game', $name)->latest()->get(),
+            'kategorijoki' => PaketJoki::KATEGORI,
+        ]);
     }
 }

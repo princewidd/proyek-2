@@ -8,7 +8,15 @@ class PaketJoki extends Model
 {
     protected $table = 'paket_joki';
 
-    protected $fillable = ['nama_paket', 'game', 'harga', 'estimasi_waktu', 'deskripsi'];
+    protected $fillable = ['nama_paket', 'game', 'kategori', 'harga', 'estimasi_waktu', 'deskripsi'];
+
+    public const KATEGORI = [
+        'leveling-account' => 'Leveling Account',
+        'leveling-character' => 'Leveling Character',
+        'maintenance-account' => 'Maintenance Account',
+        'explorasi' => 'Explorasi',
+        'quest' => 'Quest',
+    ];
 
     public function pesananJokis()
     {

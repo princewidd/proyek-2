@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [GameController::class, 'index'])->name('beranda');
 
+Route::get('/game/{slug}', [GameController::class, 'show'])->name('game.show');
+
 Route::get('/dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('dashboard');
