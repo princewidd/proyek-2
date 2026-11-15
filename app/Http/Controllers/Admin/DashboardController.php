@@ -8,21 +8,34 @@ use App\Models\PaketJoki;
 use App\Models\PesananJoki;
 use App\Models\TransaksiAkun;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request): View
     {
-        $search = $request->query('search');
+        $tab = $request->query('tab', 'my-listing');
+        $tabs = ['my-listing', 'dashboard', 'payout', 'purchases', 'favourites', 'reviews'];
 
-        $akunGames = AkunGame::when($search, function ($query, $search) {
-            $query->where('judul', 'like', "%{$search}%")
-                  ->orWhere('game', 'like', "%{$search}%");
-        })->latest()->paginate(10)->withQueryString();
+        if (! in_array($tab, $tabs)) {
+            $tab = 'my-listing';
+        }
 
-        return view('admin.dashboard', [
-            'akunGames' => $akunGames,
-            'search' => $search,
+        $pesanan = PesananJoki::with('paketJoki')->latest()->get();
+
+        return view('dashboard', [
+            'tab' => $tab,
+            'tabs' => [
+                'my-listing' => 'My Listing',
+                'dashboard' => 'Dashboard',
+                'payout' => 'Payout Options',
+                'purchases' => 'My Purchases',
+                'favourites' => 'My Favourites',
+                'reviews' => 'My Reviews',
+            ],
+            'listingAkun' => AkunGame::latest()->get(),
+            'listingJoki' => PaketJoki::latest()->get(),
+            'pesanan' => $pesanan,
             'totalAkun' => AkunGame::count(),
             'akunTersedia' => AkunGame::where('status', 'tersedia')->count(),
             'totalPaketJoki' => PaketJoki::count(),

@@ -1,9 +1,10 @@
 <?php
 
 use App\Http\Controllers\Admin\AkunGameController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\BeliController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GameController;
+use App\Http\Controllers\MidtransWebhookController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -36,7 +37,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // DASHBOARD ADMIN
-Route::get('/dashboard', [DashboardController::class, 'index'])
+Route::get('/dashboard', [AdminDashboardController::class, 'index'])
     ->middleware(['auth', 'verified', 'admin'])
     ->name('dashboard');
 
@@ -57,6 +58,10 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
     Route::delete('/admin/akun/{akunGame}', [AkunGameController::class, 'destroy'])
         ->name('admin.akun.destroy');
 });
+
+// WEBHOOK MIDTRANS
+Route::post('/midtrans/callback', [MidtransWebhookController::class, 'handle'])
+    ->name('midtrans.webhook');
 
 // PROFILE
 Route::middleware('auth')->group(function () {

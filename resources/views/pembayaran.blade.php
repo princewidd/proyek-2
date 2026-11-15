@@ -18,7 +18,7 @@
                     <img src="{{ asset('img/beranda/zeroshop-white-49a3bd4-1.png') }}" alt="ZERO SHOP" class="h-9 w-9 rounded object-cover">
                     <span class="text-white font-bold text-lg tracking-wide">ZERO SHOP</span>
                 </a>
-                <a href="{{ route('dashboard', ['tab' => 'purchases']) }}" class="text-sm text-white/90 hover:text-white">Pesanan Saya</a>
+                <a href="{{ route('dashboard') }}" class="text-sm text-white/90 hover:text-white">Pesanan Saya</a>
             </div>
         </div>
     </header>
@@ -63,14 +63,32 @@
                 </dl>
 
                 <div class="mt-6 rounded-lg bg-white/10 p-4 text-xs sm:text-sm text-white/70 leading-relaxed">
-                    Pesanan kamu menunggu konfirmasi admin. Setelah pembayaran dikonfirmasi, {{ $pembayaran->pesananJoki ? 'pilot akan mulai bekerja di akunmu' : 'data akun akan dikirim' }}. Fitur upload bukti pembayaran menyusul.
+                    @if ($pembayaran->metode === 'qris' && ($snapToken || $pembayaran->status !== 'pending'))
+                        Klik "Bayar Sekarang" untuk membuka QRIS — scan dengan aplikasi mobile banking atau e-wallet kamu. Setelah dibayar, status pesanan otomatis terupdate.
+                    @else
+                        Pesanan kamu menunggu konfirmasi admin. Setelah pembayaran dikonfirmasi, {{ $pembayaran->pesananJoki ? 'pilot akan mulai bekerja di akunmu' : 'data akun akan dikirim' }}. Fitur upload bukti pembayaran menyusul.
+                    @endif
                 </div>
+
+                @if ($pembayaran->metode === 'qris' && $snapToken && $pembayaran->status === 'pending')
+                    <div class="mt-5 space-y-3">
+                        <button type="button" id="bayar-snap"
+                            class="w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#f5a844] text-[#1e2a44] font-bold hover:bg-[#f5b867] transition">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M3 7h4l2 10h10m1-10H9m6 14a1.5 1.5 0 100-3 1.5 1.5 0 000 3zm-8 0a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
+                            </svg>
+                            Bayar Sekarang (QRIS)
+                        </button>
+                        <p class="text-center text-xs text-white/50">QRIS aktif 24 jam. Salin kode pembayaran kamu: <span class="font-semibold text-white">{{ $pembayaran->kode_pembayaran }}</span></p>
+                    </div>
+                @endif
 
                 @if ($pembayaran->transaksiAkun)
                     <a href="{{ route('game.akun.show', ['slug' => \Illuminate\Support\Str::slug($pembayaran->transaksiAkun->akunGame->game), 'akun' => $pembayaran->transaksiAkun->akunGame->id]) }}"
                        class="inline-block mt-5 text-sm text-[#f5a844] hover:underline">&larr; Kembali ke detail akun</a>
                 @elseif ($pembayaran->pesananJoki)
-                    <a href="{{ route('dashboard', ['tab' => 'purchases']) }}"
+                    <a href="{{ route('dashboard') }}"
                        class="inline-block mt-5 text-sm text-[#f5a844] hover:underline">Lihat pesanan saya &rarr;</a>
                 @endif
             </section>
@@ -84,6 +102,28 @@
             &copy; {{ date('Y') }} ZERO SHOP. Semua hak dilindungi.
         </div>
     </footer>
+
+    @if ($pembayaran->metode === 'qris' && $snapToken)
+        <script src="{{ config('midtrans.is_production')
+            ? 'https://app.midtrans.com/snap/snap.js'
+            : 'https://app.sandbox.midtrans.com/snap/snap.js' }}"
+            data-client-key="{{ config('midtrans.client_key') }}"></script>
+
+        <script>
+            const snapToken = @js($snapToken);
+
+            const bayarBtn = document.getElementById('bayar-snap');
+            if (bayarBtn) {
+                bayarBtn.addEventListener('click', () => {
+                    window.snap.pay(snapToken, {
+                        onSuccess: () => window.location.reload(),
+                        onPending: () => window.location.reload(),
+                        onError: () => window.location.reload(),
+                    });
+                });
+            }
+        </script>
+    @endif
 
 </body>
 </html>

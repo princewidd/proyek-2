@@ -7,6 +7,7 @@ use App\Models\PaketJoki;
 use App\Models\Pembayaran;
 use App\Models\PesananJoki;
 use App\Models\TransaksiAkun;
+use App\Services\MidtransService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -29,7 +30,7 @@ class BeliController extends Controller
 
         $pembayaran = Pembayaran::create([
             'transaksi_akun_id' => $transaksi->id,
-            'kode_pembayaran' => 'PAY-' . strtoupper(Str::random(8)),
+            'kode_pembayaran' => 'PAY-'.strtoupper(Str::random(8)),
             'metode' => $data['metode'],
             'jumlah' => $akunGame->harga,
             'status' => 'pending',
@@ -63,7 +64,7 @@ class BeliController extends Controller
 
         $pembayaran = Pembayaran::create([
             'pesanan_joki_id' => $pesanan->id,
-            'kode_pembayaran' => 'PAY-' . strtoupper(Str::random(8)),
+            'kode_pembayaran' => 'PAY-'.strtoupper(Str::random(8)),
             'metode' => $data['metode'],
             'jumlah' => $paketJoki->harga,
             'status' => 'pending',
@@ -76,7 +77,7 @@ class BeliController extends Controller
 
     public function show(Request $request, Pembayaran $pembayaran)
     {
-        $pembayaran->load(['transaksiAkun.akunGame', 'pesananJoki.paketJoki']);
+        $pembayaran->load(['transaksiAkun.akunGame', 'transaksiAkun.user', 'pesananJoki.paketJoki', 'pesananJoki.user']);
 
         $punyaAkses = $pembayaran->transaksiAkun?->user_id === $request->user()->id
             || $pembayaran->pesananJoki?->user_id === $request->user()->id
@@ -84,8 +85,28 @@ class BeliController extends Controller
 
         abort_unless($punyaAkses, 403);
 
+        $snapToken = null;
+
+        if ($pembayaran->metode === 'qris'
+            && $pembayaran->status === 'pending'
+            && MidtransService::aktif()) {
+            MidtransService::sinkronStatus($pembayaran->refresh());
+
+            if (! $pembayaran->snap_token) {
+                $snapToken = MidtransService::snapToken($pembayaran);
+
+                if ($snapToken) {
+                    $pembayaran->update([
+                        'snap_token' => $snapToken,
+                        'midtrans_order_id' => $pembayaran->kode_pembayaran,
+                    ]);
+                }
+            }
+        }
+
         return view('pembayaran', [
-            'pembayaran' => $pembayaran,
+            'pembayaran' => $pembayaran->refresh(),
+            'snapToken' => $pembayaran->snap_token,
         ]);
     }
 }

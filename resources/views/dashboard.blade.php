@@ -450,6 +450,27 @@
                         </p>
                     </div>
 
+                    <div class="rounded-xl bg-[#1e2a44] p-5 shadow-md">
+                        <p class="text-xs text-white/70">Total Akun</p>
+                        <p class="mt-1 text-3xl font-bold text-white">
+                            {{ $totalAkun }}
+                        </p>
+                    </div>
+
+                    <div class="rounded-xl bg-[#1e2a44] p-5 shadow-md">
+                        <p class="text-xs text-white/70">Akun Tersedia</p>
+                        <p class="mt-1 text-3xl font-bold text-[#f5a844]">
+                            {{ $akunTersedia }}
+                        </p>
+                    </div>
+
+                    <div class="rounded-xl bg-[#1e2a44] p-5 shadow-md">
+                        <p class="text-xs text-white/70">Paket Joki</p>
+                        <p class="mt-1 text-3xl font-bold text-white">
+                            {{ $totalPaketJoki }}
+                        </p>
+                    </div>
+
                 </div>
             </section>
 

@@ -34,11 +34,11 @@
                         <a href="{{ route('register') }}" class="hidden sm:inline-block text-sm bg-white text-[#1e2a44] font-medium px-4 py-1.5 rounded-full hover:bg-white/90">Daftar</a>
                     @endguest
                     @if (auth()->check() && auth()->user()->role === 'admin')
-                        <a href="{{ route('dashboard', ['tab' => 'my-listing']) }}" class="hidden sm:inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-full bg-[#f5a844] text-[#1e2a44] text-sm font-bold hover:bg-[#f5b867] transition" title="Tambah Listing">
+                        <a href="{{ route('dashboard') }}" class="hidden sm:inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-full bg-[#f5a844] text-[#1e2a44] text-sm font-bold hover:bg-[#f5b867] transition" title="Tambah Listing">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
                             <span>Add</span>
                         </a>
-                        <a href="{{ route('dashboard', ['tab' => 'my-listing']) }}" class="sm:hidden inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-full bg-[#f5a844] text-[#1e2a44] font-bold hover:bg-[#f5b867] transition" title="Tambah Listing">
+                        <a href="{{ route('dashboard') }}" class="sm:hidden inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-full bg-[#f5a844] text-[#1e2a44] font-bold hover:bg-[#f5b867] transition" title="Tambah Listing">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
                         </a>
                     @endif

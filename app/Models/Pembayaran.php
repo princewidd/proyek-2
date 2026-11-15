@@ -8,7 +8,7 @@ class Pembayaran extends Model
 {
     protected $table = 'pembayaran';
 
-    protected $fillable = ['pesanan_joki_id', 'transaksi_akun_id', 'kode_pembayaran', 'metode', 'jumlah', 'status', 'bukti'];
+    protected $fillable = ['pesanan_joki_id', 'transaksi_akun_id', 'kode_pembayaran', 'metode', 'jumlah', 'status', 'bukti', 'snap_token', 'midtrans_order_id', 'midtrans_status'];
 
     public function pesananJoki()
     {

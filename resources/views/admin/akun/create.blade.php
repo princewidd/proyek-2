@@ -62,7 +62,7 @@
     <!-- NAVBAR -->
     <header class="bg-[#1e2a44] sticky top-0 z-30 shadow-md shrink-0">
         <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-14">
-            <a href="{{ route('dashboard', ['tab' => 'my-listing']) }}" class="inline-flex items-center gap-2 text-sm font-semibold text-[#f5a844] hover:text-white transition">
+            <a href="{{ route('dashboard') }}" class="inline-flex items-center gap-2 text-sm font-semibold text-[#f5a844] hover:text-white transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
                 </svg>
@@ -510,7 +510,7 @@
                 <!-- TOMBOL SUBMIT -->
                 <div style="display: flex; align-items: center; justify-content: flex-end; gap: 12px;" class="pt-6 border-t border-gray-200">
                     <a
-                        href="{{ route('dashboard', ['tab' => 'my-listing']) }}"
+                        href="{{ route('dashboard') }}"
                         class="px-5 py-2.5 rounded-xl bg-white border border-gray-300 text-gray-700 text-sm font-semibold hover:bg-gray-100 transition"
                     >
                         Batal

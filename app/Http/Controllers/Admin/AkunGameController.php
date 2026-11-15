@@ -68,7 +68,7 @@ class AkunGameController extends Controller
         AkunGame::create($validated);
 
         return redirect()
-            ->route('dashboard', ['tab' => 'my-listing'])
+            ->route('dashboard')
             ->with('success', 'Listing berhasil ditambahkan!');
     }
 
@@ -125,12 +125,14 @@ class AkunGameController extends Controller
         $gambarTambahanLama = $akunGame->gambar_tambahan ?? [];
         $yangDihapus = $request->input('hapus_gambar_tambahan', []);
 
-        if (!empty($yangDihapus)) {
+        if (! empty($yangDihapus)) {
             $gambarTambahanLama = array_values(array_filter($gambarTambahanLama, function ($path) use ($yangDihapus) {
                 if (in_array($path, $yangDihapus, true)) {
                     $this->hapusGambar($path);
+
                     return false;
                 }
+
                 return true;
             }));
         }
@@ -148,7 +150,7 @@ class AkunGameController extends Controller
         $akunGame->update($validated);
 
         return redirect()
-            ->route('dashboard', ['tab' => 'my-listing'])
+            ->route('dashboard')
             ->with('success', 'Listing berhasil diperbarui!');
     }
 
@@ -170,7 +172,7 @@ class AkunGameController extends Controller
         $akunGame->delete();
 
         return redirect()
-            ->route('dashboard', ['tab' => 'my-listing'])
+            ->route('dashboard')
             ->with('success', 'Listing berhasil dihapus!');
     }
 
