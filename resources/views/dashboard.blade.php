@@ -316,28 +316,15 @@
                                             </div>
                                         </div>
 
-                                        <div class="grid grid-cols-2 gap-3">
-                                            <div>
-                                                <label class="text-sm font-semibold">Delivery Method</label>
-                                                <select name="delivery_method" required
-                                                    class="w-full rounded-lg border-gray-300 mt-1">
-                                                    <option value="coordinated" @selected(($listing->delivery_method ?? 'coordinated') === 'coordinated')>
-                                                        Coordinated</option>
-                                                    <option value="automatic" @selected($listing->delivery_method === 'automatic')>Automatic
-                                                    </option>
-                                                </select>
-                                            </div>
-
-                                            <div>
-                                                <label class="text-sm font-semibold">Status</label>
-                                                <select name="status" required
-                                                    class="w-full rounded-lg border-gray-300 mt-1">
-                                                    <option value="tersedia" @selected($listing->status === 'tersedia')>Tersedia
-                                                    </option>
-                                                    <option value="terjual" @selected($listing->status === 'terjual')>Terjual
-                                                    </option>
-                                                </select>
-                                            </div>
+                                        <div>
+                                            <label class="text-sm font-semibold">Status</label>
+                                            <select name="status" required
+                                                class="w-full rounded-lg border-gray-300 mt-1">
+                                                <option value="tersedia" @selected($listing->status === 'tersedia')>Tersedia
+                                                </option>
+                                                <option value="terjual" @selected($listing->status === 'terjual')>Terjual
+                                                </option>
+                                            </select>
                                         </div>
 
                                         <div>

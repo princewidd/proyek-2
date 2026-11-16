@@ -19,6 +19,8 @@ class AkunGameController extends Controller
 
     public function store(Request $request)
     {
+        $request->merge(['harga' => preg_replace('/\D/', '', (string) $request->input('harga'))]);
+
         $validated = $request->validate([
             'game' => 'required|string|max:255',
             'judul' => 'required|string|max:255',
@@ -29,10 +31,7 @@ class AkunGameController extends Controller
             'server' => 'nullable|string|max:255',
             'multiple_quantity' => 'nullable|boolean',
             'quantity' => 'nullable|integer|min:1',
-            'delivery_method' => 'required|in:coordinated,automatic',
             'account_linked' => 'nullable|boolean',
-            'delivery_days' => 'nullable|integer|min:0',
-            'delivery_hours' => 'nullable|integer|min:0',
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:50',
 
@@ -82,6 +81,8 @@ class AkunGameController extends Controller
 
     public function update(Request $request, AkunGame $akunGame)
     {
+        $request->merge(['harga' => preg_replace('/\D/', '', (string) $request->input('harga'))]);
+
         $validated = $request->validate([
             'game' => 'required|string|max:255',
             'judul' => 'required|string|max:255',
@@ -92,10 +93,7 @@ class AkunGameController extends Controller
             'server' => 'nullable|string|max:255',
             'multiple_quantity' => 'nullable|boolean',
             'quantity' => 'nullable|integer|min:1',
-            'delivery_method' => 'required|in:coordinated,automatic',
             'account_linked' => 'nullable|boolean',
-            'delivery_days' => 'nullable|integer|min:0',
-            'delivery_hours' => 'nullable|integer|min:0',
             'tags' => 'nullable|array',
             'tags.*' => 'string|max:50',
 

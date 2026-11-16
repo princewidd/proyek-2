@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AkunGameController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\PaketJokiController;
 use App\Http\Controllers\BeliController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\MidtransWebhookController;
@@ -57,6 +58,9 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     Route::delete('/admin/akun/{akunGame}', [AkunGameController::class, 'destroy'])
         ->name('admin.akun.destroy');
+
+    Route::post('/admin/joki', [PaketJokiController::class, 'store'])
+        ->name('admin.joki.store');
 });
 
 // WEBHOOK MIDTRANS

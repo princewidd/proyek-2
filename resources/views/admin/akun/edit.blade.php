@@ -267,12 +267,15 @@
                                 <div style="display: flex; align-items: center; gap: 10px; padding: 0 14px;" class="rounded-xl bg-white/10 border border-white/20 focus-within:border-[#f5a844] focus-within:ring-1 focus-within:ring-[#f5a844]">
                                     <span class="text-xs font-bold text-[#f5a844] shrink-0">Rp</span>
                                     <input
-                                        type="number"
+                                        type="text"
+                                        inputmode="numeric"
                                         name="harga"
-                                        value="{{ old('harga', $akun->harga) }}"
-                                        min="0"
+                                        value="{{ old('harga')
+                                            ? number_format((int) preg_replace('/\D/', '', old('harga')), 0, ',', '.')
+                                            : number_format($akun->harga, 0, ',', '.') }}"
                                         required
-                                        placeholder="500000"
+                                        placeholder="500.000"
+                                        x-on:input="$el.value = $el.value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.')"
                                         class="clean-input w-full py-2.5 px-0 text-sm text-white placeholder-white/40"
                                     >
                                 </div>
@@ -303,7 +306,7 @@
                             </div>
                         </div>
 
-                        <!-- Card 2: Server, Delivery Method, Linked, Delivery Time, Description, Tags -->
+                        <!-- Card 2: Server, Linked, Description, Tags -->
                         <div style="display: flex; flex-direction: column; gap: 20px;" class="bg-[#1e2a44] rounded-2xl p-5 shadow-md text-white">
                             <!-- Server -->
                             <div>
@@ -322,40 +325,6 @@
                                 </select>
                             </div>
 
-                            <!-- Delivery Method -->
-                            <div>
-                                <label class="field-label text-xs font-semibold text-[#f5a844]">Delivery Method *</label>
-                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
-                                    <label
-                                        @click="deliveryMethod = 'coordinated'"
-                                        style="display: flex; align-items: center; gap: 12px; padding: 14px;"
-                                        class="cursor-pointer rounded-xl border-2 transition"
-                                        :class="deliveryMethod === 'coordinated'
-                                            ? 'border-[#f5a844] bg-[#f5a844]/10'
-                                            : 'border-white/15 bg-white/5 hover:border-white/30'"
-                                    >
-                                        <input type="radio" name="delivery_method" value="coordinated" x-model="deliveryMethod" class="text-[#f5a844] focus:ring-[#f5a844]">
-                                        <span class="text-sm font-semibold text-white">Coordinated</span>
-                                    </label>
-
-                                    <label
-                                        @click="deliveryMethod = 'automatic'"
-                                        style="display: flex; align-items: center; gap: 12px; padding: 14px;"
-                                        class="cursor-pointer rounded-xl border-2 transition"
-                                        :class="deliveryMethod === 'automatic'
-                                            ? 'border-[#f5a844] bg-[#f5a844]/10'
-                                            : 'border-white/15 bg-white/5 hover:border-white/30'"
-                                    >
-                                        <input type="radio" name="delivery_method" value="automatic" x-model="deliveryMethod" class="text-[#f5a844] focus:ring-[#f5a844]">
-                                        <span class="text-sm font-semibold text-white">Automatic</span>
-                                    </label>
-                                </div>
-                                <p class="text-[11px] text-white/60 mt-2">
-                                    <span x-show="deliveryMethod === 'coordinated'">Admin akan berkoordinasi langsung dengan pembeli melalui chat setelah pembayaran dikonfirmasi.</span>
-                                    <span x-show="deliveryMethod === 'automatic'" x-cloak>Data akun dikirim otomatis kepada pembeli segera setelah pembayaran berhasil.</span>
-                                </p>
-                            </div>
-
                             <!-- Account Linked Checkbox -->
                             <div>
                                 <label style="display: inline-flex; align-items: center; gap: 10px;" class="cursor-pointer select-none">
@@ -368,37 +337,6 @@
                                     >
                                     <span class="text-xs font-medium text-white/90">Is this account already linked or registered to an existing email or phone?</span>
                                 </label>
-                            </div>
-
-                            <!-- Delivery Time -->
-                            <div>
-                                <label class="field-label text-xs font-semibold text-[#f5a844]">Delivery Time</label>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                                    <div>
-                                        <label class="field-label text-[11px] text-white/70">Days</label>
-                                        <input
-                                            type="number"
-                                            name="delivery_days"
-                                            value="{{ old('delivery_days', $akun->delivery_days ?? 0) }}"
-                                            min="0"
-                                            placeholder="0"
-                                            class="w-full rounded-xl bg-white/10 border border-white/20 px-3.5 py-2 text-sm text-white focus:border-[#f5a844] focus:outline-none"
-                                        >
-                                    </div>
-                                    <div>
-                                        <label class="field-label text-[11px] text-white/70">Hours</label>
-                                        <input
-                                            type="number"
-                                            name="delivery_hours"
-                                            value="{{ old('delivery_hours', $akun->delivery_hours ?? 1) }}"
-                                            min="0"
-                                            max="23"
-                                            placeholder="1"
-                                            class="w-full rounded-xl bg-white/10 border border-white/20 px-3.5 py-2 text-sm text-white focus:border-[#f5a844] focus:outline-none"
-                                        >
-                                    </div>
-                                </div>
-                                <p class="text-[11px] text-white/60 mt-1.5">Estimasi waktu maksimal penyerahan akun kepada pembeli.</p>
                             </div>
 
                             <!-- Descriptions -->
@@ -573,7 +511,6 @@
                 gameSearch: '',
                 selectedGame: @js(old('game', $akun->game)),
                 multipleQuantity: @js((bool) old('multiple_quantity', $akun->multiple_quantity)),
-                deliveryMethod: @js(old('delivery_method', $akun->delivery_method ?? 'coordinated')),
                 tags: @js(old('tags', $akun->tags ?? [])),
                 tagInput: '',
                 mainPreview: @js($initialMain),

@@ -93,7 +93,7 @@
             @endif
 
             <form
-                action="{{ route('admin.akun.store') }}"
+                :action="category === 'joki' ? '{{ route('admin.joki.store') }}' : '{{ route('admin.akun.store') }}'"
                 method="POST"
                 enctype="multipart/form-data"
                 style="display: flex; flex-direction: column; gap: 36px;"
@@ -248,15 +248,27 @@
                         <!-- Card 1: Judul, Harga, Multiple Quantity -->
                         <div style="display: flex; flex-direction: column; gap: 18px;" class="bg-[#1e2a44] rounded-2xl p-5 shadow-md text-white">
                             <div>
-                                <label class="field-label text-xs font-semibold text-white">Listing Title <span class="text-[#f5a844]">*</span></label>
+                                <label class="field-label text-xs font-semibold text-white"><span x-text="category === 'joki' ? 'Nama Paket' : 'Listing Title'"></span> <span class="text-[#f5a844]">*</span></label>
                                 <input
                                     type="text"
-                                    name="judul"
+                                    x-model="judul"
+                                    :name="category === 'joki' ? '' : 'judul'"
                                     value="{{ old('judul') }}"
                                     required
+                                    x-show="category === 'accounts'"
                                     placeholder="Contoh: AR 60 Asia | 15x B5 Archon Lengkap + Sign"
                                     class="w-full rounded-xl bg-white/10 border border-white/20 px-3.5 py-2.5 text-sm text-white placeholder-white/40 focus:border-[#f5a844] focus:ring-1 focus:ring-[#f5a844] focus:outline-none"
                                 >
+                                <input
+                                    type="text"
+                                    x-model="judul"
+                                    x-show="category === 'joki'"
+                                    x-cloak
+                                    required
+                                    placeholder="Contoh: Joki Push Mythic 1 Hari"
+                                    class="w-full rounded-xl bg-white/10 border border-white/20 px-3.5 py-2.5 text-sm text-white placeholder-white/40 focus:border-[#f5a844] focus:ring-1 focus:ring-[#f5a844] focus:outline-none"
+                                >
+                                <input type="hidden" name="nama_paket" :value="judul" x-show="category === 'joki'">
                             </div>
 
                             <div>
@@ -264,18 +276,19 @@
                                 <div style="display: flex; align-items: center; gap: 10px; padding: 0 14px;" class="rounded-xl bg-white/10 border border-white/20 focus-within:border-[#f5a844] focus-within:ring-1 focus-within:ring-[#f5a844]">
                                     <span class="text-xs font-bold text-[#f5a844] shrink-0">Rp</span>
                                     <input
-                                        type="number"
+                                        type="text"
+                                        inputmode="numeric"
                                         name="harga"
-                                        value="{{ old('harga') }}"
-                                        min="0"
+                                        value="{{ old('harga') ? number_format((int) preg_replace('/\D/', '', old('harga')), 0, ',', '.') : '' }}"
                                         required
-                                        placeholder="500000"
+                                        placeholder="500.000"
+                                        x-on:input="$el.value = $el.value.replace(/\D/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, '.')"
                                         class="clean-input w-full py-2.5 px-0 text-sm text-white placeholder-white/40"
                                     >
                                 </div>
                             </div>
 
-                            <div>
+                            <div x-show="category === 'accounts'">
                                 <label style="display: inline-flex; align-items: center; gap: 10px;" class="cursor-pointer select-none">
                                     <input
                                         type="checkbox"
@@ -300,10 +313,10 @@
                             </div>
                         </div>
 
-                        <!-- Card 2: Server, Delivery Method, Linked, Delivery Time, Description, Tags -->
+                        <!-- Card 2: Server, Linked, Description, Tags -->
                         <div style="display: flex; flex-direction: column; gap: 20px;" class="bg-[#1e2a44] rounded-2xl p-5 shadow-md text-white">
                             <!-- Server -->
-                            <div>
+                            <div x-show="category === 'accounts'">
                                 <label class="field-label text-xs font-semibold text-white">Server</label>
                                 <select
                                     name="server"
@@ -319,42 +332,8 @@
                                 </select>
                             </div>
 
-                            <!-- Delivery Method -->
-                            <div>
-                                <label class="field-label text-xs font-semibold text-[#f5a844]">Delivery Method *</label>
-                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;">
-                                    <label
-                                        @click="deliveryMethod = 'coordinated'"
-                                        style="display: flex; align-items: center; gap: 12px; padding: 14px;"
-                                        class="cursor-pointer rounded-xl border-2 transition"
-                                        :class="deliveryMethod === 'coordinated'
-                                            ? 'border-[#f5a844] bg-[#f5a844]/10'
-                                            : 'border-white/15 bg-white/5 hover:border-white/30'"
-                                    >
-                                        <input type="radio" name="delivery_method" value="coordinated" x-model="deliveryMethod" class="text-[#f5a844] focus:ring-[#f5a844]">
-                                        <span class="text-sm font-semibold text-white">Coordinated</span>
-                                    </label>
-
-                                    <label
-                                        @click="deliveryMethod = 'automatic'"
-                                        style="display: flex; align-items: center; gap: 12px; padding: 14px;"
-                                        class="cursor-pointer rounded-xl border-2 transition"
-                                        :class="deliveryMethod === 'automatic'
-                                            ? 'border-[#f5a844] bg-[#f5a844]/10'
-                                            : 'border-white/15 bg-white/5 hover:border-white/30'"
-                                    >
-                                        <input type="radio" name="delivery_method" value="automatic" x-model="deliveryMethod" class="text-[#f5a844] focus:ring-[#f5a844]">
-                                        <span class="text-sm font-semibold text-white">Automatic</span>
-                                    </label>
-                                </div>
-                                <p class="text-[11px] text-white/60 mt-2">
-                                    <span x-show="deliveryMethod === 'coordinated'">Admin akan berkoordinasi langsung dengan pembeli melalui chat setelah pembayaran dikonfirmasi.</span>
-                                    <span x-show="deliveryMethod === 'automatic'" x-cloak>Data akun dikirim otomatis kepada pembeli segera setelah pembayaran berhasil.</span>
-                                </p>
-                            </div>
-
                             <!-- Account Linked Checkbox -->
-                            <div>
+                            <div x-show="category === 'accounts'">
                                 <label style="display: inline-flex; align-items: center; gap: 10px;" class="cursor-pointer select-none">
                                     <input
                                         type="checkbox"
@@ -367,35 +346,30 @@
                                 </label>
                             </div>
 
-                            <!-- Delivery Time -->
-                            <div>
-                                <label class="field-label text-xs font-semibold text-[#f5a844]">Delivery Time</label>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                                    <div>
-                                        <label class="field-label text-[11px] text-white/70">Days</label>
-                                        <input
-                                            type="number"
-                                            name="delivery_days"
-                                            value="{{ old('delivery_days', 0) }}"
-                                            min="0"
-                                            placeholder="0"
-                                            class="w-full rounded-xl bg-white/10 border border-white/20 px-3.5 py-2 text-sm text-white focus:border-[#f5a844] focus:outline-none"
-                                        >
-                                    </div>
-                                    <div>
-                                        <label class="field-label text-[11px] text-white/70">Hours</label>
-                                        <input
-                                            type="number"
-                                            name="delivery_hours"
-                                            value="{{ old('delivery_hours', 1) }}"
-                                            min="0"
-                                            max="23"
-                                            placeholder="1"
-                                            class="w-full rounded-xl bg-white/10 border border-white/20 px-3.5 py-2 text-sm text-white focus:border-[#f5a844] focus:outline-none"
-                                        >
-                                    </div>
+                            <!-- Joki: Kategori & Estimasi -->
+                            <div x-show="category === 'joki'" x-cloak style="display: flex; flex-direction: column; gap: 18px;">
+                                <div>
+                                    <label class="field-label text-xs font-semibold text-white">Kategori Joki</label>
+                                    <select
+                                        name="kategori"
+                                        class="w-full rounded-xl bg-[#2a3a5c] border border-white/20 px-3.5 py-2.5 text-sm text-white focus:border-[#f5a844] focus:ring-1 focus:ring-[#f5a844] focus:outline-none"
+                                    >
+                                        <option value="">— Pilih Kategori —</option>
+                                        @foreach (\App\Models\PaketJoki::KATEGORI as $key => $label)
+                                            <option value="{{ $key }}" @selected(old('kategori') === $key)>{{ $label }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
-                                <p class="text-[11px] text-white/60 mt-1.5">Estimasi waktu maksimal penyerahan akun kepada pembeli.</p>
+                                <div>
+                                    <label class="field-label text-xs font-semibold text-white">Estimasi Waktu</label>
+                                    <input
+                                        type="text"
+                                        name="estimasi_waktu"
+                                        value="{{ old('estimasi_waktu') }}"
+                                        placeholder="Contoh: 1-3 hari"
+                                        class="w-full rounded-xl bg-white/10 border border-white/20 px-3.5 py-2.5 text-sm text-white placeholder-white/40 focus:border-[#f5a844] focus:ring-1 focus:ring-[#f5a844] focus:outline-none"
+                                    >
+                                </div>
                             </div>
 
                             <!-- Descriptions -->
@@ -418,7 +392,7 @@
                             </div>
 
                             <!-- Tags -->
-                            <div>
+                            <div x-show="category === 'accounts'">
                                 <label class="field-label text-xs font-semibold text-white">Tags</label>
                                 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px;" class="rounded-xl bg-white/10 border border-white/20 px-3 py-2 focus-within:border-[#f5a844]">
                                     <template x-for="(tag, index) in tags" :key="index">
@@ -444,7 +418,7 @@
                 </div>
 
                 <!-- ================= STEP 4: UPLOAD IMAGES ================= -->
-                <div class="step-row pb-6">
+                <div class="step-row pb-6" x-show="category === 'accounts'">
                     <div style="display: flex; align-items: flex-start; gap: 14px;">
                         <span class="w-7 h-7 rounded-full bg-[#1e2a44] text-[#f5a844] border-2 border-[#f5a844] flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 shadow-sm">
                             4
@@ -539,10 +513,10 @@
         function listingForm() {
             return {
                 category: 'accounts',
+                judul: @js(old('judul')),
                 gameSearch: '',
                 selectedGame: @js(old('game', $games[0]['name'] ?? '')),
                 multipleQuantity: @js((bool) old('multiple_quantity', false)),
-                deliveryMethod: @js(old('delivery_method', 'coordinated')),
                 tags: @js(old('tags', [])),
                 tagInput: '',
                 mainPreview: null,
