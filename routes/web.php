@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Admin\AkunGameController;
+use App\Http\Controllers\Admin\ChatAdminController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\PaketJokiController;
 use App\Http\Controllers\BeliController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\MidtransWebhookController;
 use App\Http\Controllers\ProfileController;
@@ -35,6 +37,16 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/pembayaran/{pembayaran}', [BeliController::class, 'show'])
         ->name('pembayaran.show');
+
+    // CHAT PELANGGAN
+    Route::get('/chat', [ChatController::class, 'index'])
+        ->name('chat');
+
+    Route::get('/chat/poll', [ChatController::class, 'poll'])
+        ->name('chat.poll');
+
+    Route::post('/chat/messages', [ChatController::class, 'send'])
+        ->name('chat.send');
 });
 
 // DASHBOARD ADMIN
@@ -61,6 +73,18 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     Route::post('/admin/joki', [PaketJokiController::class, 'store'])
         ->name('admin.joki.store');
+
+    Route::get('/admin/chat', [ChatAdminController::class, 'index'])
+        ->name('admin.chat');
+
+    Route::get('/admin/chat/{chat}', [ChatAdminController::class, 'show'])
+        ->name('admin.chat.show');
+
+    Route::get('/admin/chat/{chat}/poll', [ChatAdminController::class, 'poll'])
+        ->name('admin.chat.poll');
+
+    Route::post('/admin/chat/{chat}/messages', [ChatAdminController::class, 'send'])
+        ->name('admin.chat.send');
 });
 
 // WEBHOOK MIDTRANS

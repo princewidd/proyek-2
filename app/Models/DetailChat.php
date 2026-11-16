@@ -10,6 +10,13 @@ class DetailChat extends Model
 
     protected $fillable = ['chat_id', 'pengirim_id', 'pesan', 'dibaca'];
 
+    protected function casts(): array
+    {
+        return [
+            'dibaca' => 'boolean',
+        ];
+    }
+
     public function chat()
     {
         return $this->belongsTo(Chat::class);

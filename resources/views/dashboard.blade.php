@@ -40,6 +40,13 @@
 
             <div class="flex-1"></div>
 
+            <a href="{{ route('admin.chat') }}" title="Inbox Chat"
+                class="text-white/80 hover:text-white p-1 relative">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 12h8M8 9h8m-9.5 11L4 21V5a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6.5z" />
+                </svg>
+            </a>
+
             <a href="{{ route('admin.akun.create') }}"
                 class="inline-flex items-center gap-1 px-3 py-1.5 rounded-full bg-[#f5a844] text-[#1e2a44] text-sm font-bold hover:bg-[#f5b867] transition">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">

@@ -8,7 +8,14 @@ class Chat extends Model
 {
     protected $table = 'chats';
 
-    protected $fillable = ['pelanggan_id', 'admin_id', 'status'];
+    protected $fillable = ['pelanggan_id', 'admin_id', 'status', 'last_message_at'];
+
+    protected function casts(): array
+    {
+        return [
+            'last_message_at' => 'datetime',
+        ];
+    }
 
     public function pelanggan()
     {
