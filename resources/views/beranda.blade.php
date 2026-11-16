@@ -33,6 +33,13 @@
                         <a href="{{ route('login') }}" class="hidden sm:inline-block text-sm text-white/90 hover:text-white">Masuk</a>
                         <a href="{{ route('register') }}" class="hidden sm:inline-block text-sm bg-white text-[#1e2a44] font-medium px-4 py-1.5 rounded-full hover:bg-white/90">Daftar</a>
                     @endguest
+                    @if (auth()->check() && auth()->user()->role !== 'admin')
+                        <a href="{{ route('chat') }}" class="text-white/90 hover:text-white transition" title="Chat CS">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M8 12h8M8 9h8m-9.5 11L4 21V5a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H6.5z"/>
+                            </svg>
+                        </a>
+                    @endif
                     @if (auth()->check() && auth()->user()->role === 'admin')
                         <a href="{{ route('dashboard') }}" class="hidden sm:inline-flex items-center justify-center gap-1 px-3 py-1.5 rounded-full bg-[#f5a844] text-[#1e2a44] text-sm font-bold hover:bg-[#f5b867] transition" title="Tambah Listing">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path></svg>
