@@ -40,4 +40,12 @@ class DashboardController extends Controller
             'pesanan' => $pesanan,
         ]);
     }
+
+    public function customer()
+        {
+            $purchases = []; // Nanti diisi query transaksi user
+            $favorites = []; // Nanti diisi query favorit user
+        
+            return view('customer.dashboard', compact('purchases', 'favorites'));
+        }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\PaketJokiController;
 use App\Http\Controllers\BeliController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\MidtransWebhookController;
 use App\Http\Controllers\ProfileController;
@@ -101,6 +102,11 @@ Route::middleware('auth')->group(function () {
 
     Route::delete('/profile', [ProfileController::class, 'destroy'])
         ->name('profile.destroy');
+});
+
+Route::middleware('auth')->group(function () {
+    Route::get('/my-dashboard', [DashboardController::class, 'customer'])
+        ->name('customer.dashboard');
 });
 
 require __DIR__.'/auth.php';
