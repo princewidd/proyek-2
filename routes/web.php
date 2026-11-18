@@ -6,14 +6,12 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\PaketJokiController;
 use App\Http\Controllers\BeliController;
 use App\Http\Controllers\ChatController;
-use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GameController;
 use App\Http\Controllers\MidtransWebhookController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\DashboardController;
 
-Route::delete('/dashboard/reviews/{review}', [DashboardController::class, 'destroyReview'])
+Route::delete('/dashboard/reviews/{review}', [AdminDashboardController::class, 'destroyReview'])
     ->name('dashboard.reviews.destroy');
 
 // BERANDA
