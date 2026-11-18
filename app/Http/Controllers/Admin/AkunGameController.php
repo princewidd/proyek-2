@@ -22,7 +22,7 @@ class AkunGameController extends Controller
         $request->merge(['harga' => preg_replace('/\D/', '', (string) $request->input('harga'))]);
 
         $validated = $request->validate([
-            'game' => 'required|string|max:255',
+            'game' => 'nullable|string|max:255',
             'judul' => 'required|string|max:255',
             'harga' => 'required|integer|min:0',
             'deskripsi' => 'nullable|string',
@@ -40,10 +40,12 @@ class AkunGameController extends Controller
             'gambar_tambahan.*' => 'image|mimes:jpg,jpeg,png,webp|max:2048',
         ]);
 
+        $validated['game'] = $akunGame->game;
         $validated['multiple_quantity'] = $request->boolean('multiple_quantity');
         $validated['account_linked'] = $request->boolean('account_linked');
 
-        $validated['quantity'] = $validated['multiple_quantity']
+        $validated['quantity'] = $validated['game'] = $akunGame->game;
+        $validated['multiple_quantity']
             ? ($validated['quantity'] ?? 1)
             : 1;
 
@@ -84,7 +86,7 @@ class AkunGameController extends Controller
         $request->merge(['harga' => preg_replace('/\D/', '', (string) $request->input('harga'))]);
 
         $validated = $request->validate([
-            'game' => 'required|string|max:255',
+            'game' => 'nullable|string|max:255',
             'judul' => 'required|string|max:255',
             'harga' => 'required|integer|min:0',
             'deskripsi' => 'nullable|string',
@@ -104,10 +106,12 @@ class AkunGameController extends Controller
             'hapus_gambar_tambahan.*' => 'string',
         ]);
 
+        $validated['game'] = $akunGame->game;
         $validated['multiple_quantity'] = $request->boolean('multiple_quantity');
         $validated['account_linked'] = $request->boolean('account_linked');
 
-        $validated['quantity'] = $validated['multiple_quantity']
+        $validated['quantity'] = $validated['game'] = $akunGame->game;
+        $validated['multiple_quantity']
             ? ($validated['quantity'] ?? 1)
             : 1;
 
@@ -181,3 +185,4 @@ class AkunGameController extends Controller
         }
     }
 }
+

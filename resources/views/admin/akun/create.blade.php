@@ -334,16 +334,7 @@
 
                             <!-- Account Linked Checkbox -->
                             <div x-show="category === 'accounts'">
-                                <label style="display: inline-flex; align-items: center; gap: 10px;" class="cursor-pointer select-none">
-                                    <input
-                                        type="checkbox"
-                                        name="account_linked"
-                                        value="1"
-                                        @checked(old('account_linked'))
-                                        class="rounded border-white/30 bg-white/10 text-[#f5a844] focus:ring-[#f5a844]"
-                                    >
-                                    <span class="text-xs font-medium text-white/90">Is this account already linked or registered to an existing email or phone?</span>
-                                </label>
+                                
                             </div>
 
                             <!-- Joki: Kategori & Estimasi -->
@@ -562,3 +553,4 @@
     </script>
 </body>
 </html>
+

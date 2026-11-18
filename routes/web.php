@@ -11,6 +11,10 @@ use App\Http\Controllers\GameController;
 use App\Http\Controllers\MidtransWebhookController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+
+Route::delete('/dashboard/reviews/{review}', [DashboardController::class, 'destroyReview'])
+    ->name('dashboard.reviews.destroy');
 
 // BERANDA
 Route::get('/', [GameController::class, 'index'])

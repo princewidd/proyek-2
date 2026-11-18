@@ -165,73 +165,46 @@
                     </div>
                 </div>
 
-                <!-- ================= STEP 2: SELECT GAMES ================= -->
+                                <!-- ================= STEP 2: SELECTED GAME (LOCKED) ================= -->
+                @php
+                    $currentGameObj = collect($games)->firstWhere('name', $akun->game);
+                    $gameThumb = $currentGameObj['img'] ?? null;
+                @endphp
                 <div class="step-row pb-8 border-b border-gray-200">
                     <div style="display: flex; align-items: flex-start; gap: 14px;">
-                        <span
-                            class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 shadow-sm transition"
-                            :class="selectedGame ? 'bg-[#1e2a44] text-[#f5a844] border-2 border-[#f5a844]' : 'bg-white border-2 border-gray-300 text-gray-600'"
-                        >
-                            2
-                        </span>
+                        <span class="w-7 h-7 rounded-full bg-[#1e2a44] text-[#f5a844] border-2 border-[#f5a844] flex items-center justify-center text-xs font-bold shrink-0 mt-0.5 shadow-sm">2</span></span>
                         <div>
-                            <h2 class="text-sm font-bold text-[#1e2a44]">Select Games</h2>
-                            <p class="text-xs text-gray-500 mt-1 leading-relaxed">Pilih game dari akun yang dijual.</p>
-                            <div x-show="selectedGame" class="mt-2.5 inline-flex items-center text-xs font-bold text-[#1e2a44] bg-[#f5a844] px-3 py-1 rounded-full shadow-sm">
-                                <span x-text="selectedGame"></span>
-                            </div>
+                            <h2 class="text-sm font-bold text-[#1e2a44]">Selected Game</h2>
+                            <p class="text-xs text-gray-500 mt-1 leading-relaxed">Game tidak dapat diubah saat mengedit listing.</p>
                         </div>
                     </div>
 
-                    <div style="display: flex; flex-direction: column; gap: 16px;" class="bg-[#1e2a44] rounded-2xl p-5 shadow-md">
-                        <!-- Search Game -->
-                        <div style="display: flex; align-items: center; gap: 10px; padding: 0 14px;" class="rounded-xl bg-white/10 border border-white/15 focus-within:border-[#f5a844] focus-within:ring-1 focus-within:ring-[#f5a844]">
-                            <svg class="w-4 h-4 text-white/50 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
-                            </svg>
-                            <input
-                                type="text"
-                                x-model="gameSearch"
-                                placeholder="Search by game name..."
-                                class="clean-input w-full py-2.5 px-0 text-sm text-white placeholder-white/50"
-                            >
+                    <div class="bg-[#1e2a44] rounded-2xl p-4 sm:p-5 shadow-md flex items-center gap-4">
+                        <input type="hidden" name="game" value="{{ $akun->game }}">
+
+                        <div style="width: 64px; height: 64px;" class="rounded-xl overflow-hidden bg-[#2a3a5c] border border-white/15 shrink-0">
+                            @if ($gameThumb)
+                                <img src="{{ asset('img/beranda/' . $gameThumb) }}" alt="{{ $akun->game }}" class="w-full h-full object-cover">
+                            @else
+                                <div class="w-full h-full flex items-center justify-center text-xs font-bold text-[#f5a844]">
+                                    GAME
+                                </div>
+                            @endif
                         </div>
 
-                        <!-- Grid Kartu Game -->
-                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(115px, 1fr)); gap: 12px;" class="max-h-72 overflow-y-auto pr-1">
-                            @foreach ($games as $g)
-                                <button
-                                    type="button"
-                                    x-show="!gameSearch || @js(strtolower($g['name'])).includes(gameSearch.toLowerCase())"
-                                    @click="selectedGame = @js($g['name'])"
-                                    class="group relative rounded-xl overflow-hidden border-2 text-left transition focus:outline-none bg-[#162035]"
-                                    :class="selectedGame === @js($g['name'])
-                                        ? 'border-[#f5a844] ring-2 ring-[#f5a844]/40'
-                                        : 'border-white/10 hover:border-white/40'"
-                                >
-                                    <div style="height: 88px;" class="w-full bg-[#2a3a5c] overflow-hidden">
-                                        <img
-                                            src="{{ asset('img/beranda/' . $g['img']) }}"
-                                            alt="{{ $g['name'] }}"
-                                            class="w-full h-full object-cover group-hover:scale-105 transition duration-200"
-                                        >
-                                    </div>
-                                    <div class="px-2 py-2 bg-[#162035]">
-                                        <p class="text-xs font-semibold text-white truncate">{{ $g['name'] }}</p>
-                                    </div>
-                                    <div
-                                        x-show="selectedGame === @js($g['name'])"
-                                        class="absolute top-1.5 right-1.5 w-5 h-5 rounded-full bg-[#f5a844] text-[#1e2a44] flex items-center justify-center text-xs font-bold shadow"
-                                    >
-                                        ✓
-                                    </div>
-                                </button>
-                            @endforeach
+                        <div class="min-w-0 flex-1">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <h3 class="text-sm sm:text-base font-bold text-white truncate">
+                                    {{ $akun->game }}
+                                </h3>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-white/10 text-white/70 border border-white/15">
+                                    Locked
+                                </span>
+                            </div>
+                            <p style="color: #ffffff;" class="text-xs text-white mt-1">
+                                Game accounts that would be fully handed over, including email (if any)
+                            </p>
                         </div>
-
-                        @error('game')
-                            <p class="text-xs text-red-300">{{ $message }}</p>
-                        @enderror
                     </div>
                 </div>
 
@@ -327,16 +300,7 @@
 
                             <!-- Account Linked Checkbox -->
                             <div>
-                                <label style="display: inline-flex; align-items: center; gap: 10px;" class="cursor-pointer select-none">
-                                    <input
-                                        type="checkbox"
-                                        name="account_linked"
-                                        value="1"
-                                        @checked(old('account_linked', $akun->account_linked))
-                                        class="rounded border-white/30 bg-white/10 text-[#f5a844] focus:ring-[#f5a844]"
-                                    >
-                                    <span class="text-xs font-medium text-white/90">Is this account already linked or registered to an existing email or phone?</span>
-                                </label>
+                                
                             </div>
 
                             <!-- Descriptions -->
@@ -565,3 +529,7 @@
     </script>
 </body>
 </html>
+
+
+
+
