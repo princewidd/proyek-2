@@ -10,6 +10,13 @@ class PesananJoki extends Model
 
     protected $fillable = ['user_id', 'paket_joki_id', 'email_akun', 'password_akun', 'catatan', 'status'];
 
+    protected function casts(): array
+    {
+        return [
+            'password_akun' => 'encrypted',
+        ];
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

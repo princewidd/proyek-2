@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AkunGameController;
 use App\Http\Controllers\Admin\ChatAdminController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\OrderStatusController;
 use App\Http\Controllers\Admin\PaketJokiController;
 use App\Http\Controllers\BeliController;
 use App\Http\Controllers\ChatController;
@@ -77,6 +78,9 @@ Route::middleware(['auth', 'verified', 'admin'])->group(function () {
 
     Route::post('/admin/joki', [PaketJokiController::class, 'store'])
         ->name('admin.joki.store');
+
+    Route::patch('/admin/orders/{type}/{id}/status', [OrderStatusController::class, 'update'])
+        ->name('admin.orders.status');
 
     Route::get('/admin/chat', [ChatAdminController::class, 'index'])
         ->name('admin.chat');

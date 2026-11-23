@@ -2,7 +2,9 @@
 
 namespace App\Services;
 
+use App\Models\AkunGame;
 use App\Models\Pembayaran;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Midtrans\Config;
 use Midtrans\Snap;
@@ -97,6 +99,8 @@ class MidtransService
             return;
         }
 
+        $statusLama = $pembayaran->status;
+
         $pembayaran->midtrans_status = $transactionStatus;
 
         if ($transactionStatus === 'settlement'
@@ -111,5 +115,36 @@ class MidtransService
         }
 
         $pembayaran->save();
+
+        if ($statusLama === 'pending'
+            && in_array($transactionStatus, ['cancel', 'deny', 'expire'], true)) {
+            self::kembalikanStok($pembayaran);
+        }
+    }
+
+    private static function kembalikanStok(Pembayaran $pembayaran): void
+    {
+        $akun = $pembayaran->transaksiAkun?->akunGame;
+
+        if (! $akun) {
+            return;
+        }
+
+        DB::transaction(function () use ($akun) {
+            $akun = AkunGame::whereKey($akun->id)->lockForUpdate()->first();
+
+            if (! $akun) {
+                return;
+            }
+
+            if ($akun->multiple_quantity) {
+                $akun->update([
+                    'quantity' => (int) $akun->quantity + 1,
+                    'status' => 'tersedia',
+                ]);
+            } else {
+                $akun->update(['status' => 'tersedia']);
+            }
+        });
     }
 }

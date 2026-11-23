@@ -53,15 +53,18 @@ class DashboardController extends Controller
             $category = match (true) {
                 in_array($statusRaw, ['selesai', 'completed', 'paid', 'berhasil']) => 'completed',
                 in_array($statusRaw, ['hold', 'on_hold', 'menunggu_verifikasi']) => 'on_hold',
+                in_array($statusRaw, ['batal', 'cancel', 'cancelled']) => 'cancelled',
                 default => 'on_going',
             };
 
             return [
-                'id' => 'AKN-' . str_pad((string) $t->id, 6, '0', STR_PAD_LEFT),
-                'kode_bayar' => $pembayaran?->kode_pembayaran ?? ('AKN-' . $t->id),
+                'id' => 'AKN-'.str_pad((string) $t->id, 6, '0', STR_PAD_LEFT),
+                'type_raw' => 'akun',
+                'id_raw' => $t->id,
+                'kode_bayar' => $pembayaran?->kode_pembayaran ?? ('AKN-'.$t->id),
                 'type' => 'Accounts',
                 'buyer_name' => $t->user?->name ?? 'Guest Buyer',
-                'buyer_username' => $t->user?->username ?? ('user-' . ($t->user_id ?? '0')),
+                'buyer_username' => $t->user?->username ?? ('user-'.($t->user_id ?? '0')),
                 'title' => $t->akunGame?->judul ?? 'Akun Game Terhapus',
                 'game' => $t->akunGame?->game ?? '-',
                 'date' => $t->created_at?->format('d F Y, H:i') ?? '-',
@@ -85,12 +88,15 @@ class DashboardController extends Controller
             $category = match (true) {
                 in_array($statusRaw, ['selesai', 'completed', 'paid', 'berhasil']) => 'completed',
                 in_array($statusRaw, ['hold', 'on_hold', 'menunggu_verifikasi']) => 'on_hold',
+                in_array($statusRaw, ['batal', 'cancel', 'cancelled']) => 'cancelled',
                 default => 'on_going',
             };
 
             return [
-                'id' => 'JKI-' . str_pad((string) $p->id, 6, '0', STR_PAD_LEFT),
-                'kode_bayar' => $pembayaran?->kode_pembayaran ?? ('JKI-' . $p->id),
+                'id' => 'JKI-'.str_pad((string) $p->id, 6, '0', STR_PAD_LEFT),
+                'type_raw' => 'joki',
+                'id_raw' => $p->id,
+                'kode_bayar' => $pembayaran?->kode_pembayaran ?? ('JKI-'.$p->id),
                 'type' => 'Joki',
                 'buyer_name' => $p->user?->name ?? 'Guest Buyer',
                 'buyer_username' => $p->user?->username ?? ($p->email_akun ?? 'customer'),
@@ -112,6 +118,7 @@ class DashboardController extends Controller
 
         $allOrders = $ordersAkun
             ->concat($ordersJoki)
+            ->reject(fn (array $order) => $order['category'] === 'cancelled')
             ->sortByDesc('timestamp')
             ->values();
 

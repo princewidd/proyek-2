@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $tabs[$tab] }} - ZERO SHOP</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600,700&display=swap" rel="stylesheet" />
@@ -63,6 +64,7 @@
 
     get filteredOrders() {
         return this.orders.filter(o => {
+            if (o.category === 'cancelled') return false;
             if (this.orderFilter !== 'all' && o.category !== this.orderFilter) return false;
             if (this.orderSearch.trim() !== '') {
                 const q = this.orderSearch.toLowerCase();
@@ -71,6 +73,18 @@
             }
             return true;
         });
+    },
+
+    get onGoingTotal() {
+        return this.orders
+            .filter(o => o.category === 'on_going')
+            .reduce((total, o) => total + Number(o.price || 0), 0);
+    },
+
+    get balanceTotal() {
+        return this.orders
+            .filter(o => o.category === 'completed')
+            .reduce((total, o) => total + Number(o.price || 0), 0);
     },
 
     get balanceHistoryItems() {
@@ -102,6 +116,41 @@
 
     formatRupiah(num) {
         return 'Rp ' + Number(num || 0).toLocaleString('id-ID');
+    },
+
+    async updateOrderStatus(order, status) {
+        if (!order.type_raw || status === order.status_raw) return;
+
+        const sebelumnya = order.status_raw;
+        order.status_raw = status;
+
+        try {
+            const res = await fetch(`/admin/orders/${order.type_raw}/${order.id_raw}/status`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'X-CSRF-TOKEN': @js(csrf_token()),
+                },
+                body: JSON.stringify({ status }),
+            });
+
+            if (!res.ok) {
+                order.status_raw = sebelumnya;
+                return;
+            }
+
+            const data = await res.json();
+            order.category = data.category;
+            order.status_label = data.status_label;
+
+            if (data.category === 'cancelled') {
+                this.orders = this.orders.filter(o => o !== order);
+                if (this.selectedOrder === order) this.selectedOrder = null;
+            }
+        } catch (e) {
+            order.status_raw = sebelumnya;
+        }
     }
 }">
 
@@ -415,9 +464,7 @@
                                 </svg>
                                 <span>On Going</span>
                             </div>
-                            <p class="mt-2 text-lg sm:text-xl font-bold text-white">
-                                Rp {{ number_format($overview['on_going'], 0, ',', '.') }}
-                            </p>
+                            <p class="mt-2 text-lg sm:text-xl font-bold text-white" x-text="formatRupiah(onGoingTotal)"></p>
                         </div>
 
                         <!-- Balance -->
@@ -428,9 +475,7 @@
                                 </svg>
                                 <span>Balance</span>
                             </div>
-                            <p class="mt-2 text-lg sm:text-xl font-bold text-[#f5a844]">
-                                Rp {{ number_format($overview['balance'], 0, ',', '.') }}
-                            </p>
+                            <p class="mt-2 text-lg sm:text-xl font-bold text-[#f5a844]" x-text="formatRupiah(balanceTotal)"></p>
                         </div>
                     </div>
                 </div>
@@ -537,13 +582,23 @@
 
                                     <!-- Status & Action -->
                                     <div class="flex items-center justify-between md:justify-end gap-2">
-                                        <span
-                                            style="padding: 5px 14px; display: inline-flex; align-items: center; justify-content: center;" class="rounded-full text-[11px] font-semibold border whitespace-nowrap text-center"
+                                        <select
+                                            :value="order.status_raw"
+                                            @change="updateOrderStatus(order, $event.target.value)"
+                                            style="padding: 5px 28px 5px 12px;"
+                                            class="rounded-full text-[11px] font-semibold border whitespace-nowrap cursor-pointer appearance-none bg-no-repeat bg-[right_0.6rem_center]"
                                             :class="order.category === 'completed'
                                                 ? 'bg-emerald-500/15 text-emerald-300 border-emerald-400/40'
-                                                : 'bg-sky-500/15 text-sky-300 border-sky-400/40'"
-                                            x-text="order.status_label"
-                                        ></span>
+                                                : (order.category === 'on_hold'
+                                                    ? 'bg-amber-500/15 text-amber-300 border-amber-400/40'
+                                                    : 'bg-sky-500/15 text-sky-300 border-sky-400/40')"
+                                        >
+                                            <option value="pending" class="text-gray-900">Pending</option>
+                                            <option value="proses" class="text-gray-900">Diproses</option>
+                                            <option value="menunggu_verifikasi" class="text-gray-900">On Hold</option>
+                                            <option value="selesai" class="text-gray-900">Selesai</option>
+                                            <option value="batal" class="text-gray-900">Batal</option>
+                                        </select>
 
                                         <button type="button" @click="selectedOrder = order"
                                             class="p-1.5 rounded-lg text-white/70 hover:text-white hover:bg-white/10 transition" title="Detail">

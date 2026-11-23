@@ -9,32 +9,48 @@ use App\Models\PesananJoki;
 use App\Models\TransaksiAkun;
 use App\Services\MidtransService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class BeliController extends Controller
 {
     public function store(Request $request, AkunGame $akunGame)
     {
-        abort_unless($akunGame->status === 'tersedia', 404);
-
         $data = $request->validate([
             'metode' => ['required', 'in:qris,bank'],
         ]);
 
-        $transaksi = TransaksiAkun::create([
-            'user_id' => $request->user()->id,
-            'akun_game_id' => $akunGame->id,
-            'harga_final' => $akunGame->harga,
-            'status' => 'pending',
-        ]);
+        $pembayaran = DB::transaction(function () use ($request, $akunGame, $data) {
+            $akun = AkunGame::whereKey($akunGame->id)->lockForUpdate()->firstOrFail();
 
-        $pembayaran = Pembayaran::create([
-            'transaksi_akun_id' => $transaksi->id,
-            'kode_pembayaran' => 'PAY-'.strtoupper(Str::random(8)),
-            'metode' => $data['metode'],
-            'jumlah' => $akunGame->harga,
-            'status' => 'pending',
-        ]);
+            abort_unless($akun->status === 'tersedia', 404);
+
+            $stok = $akun->multiple_quantity ? (int) $akun->quantity : 1;
+
+            abort_if($stok < 1, 404);
+
+            $sisa = $stok - 1;
+
+            $akun->update([
+                'quantity' => $akun->multiple_quantity ? $sisa : $akun->quantity,
+                'status' => $sisa > 0 ? 'tersedia' : 'terjual',
+            ]);
+
+            $transaksi = TransaksiAkun::create([
+                'user_id' => $request->user()->id,
+                'akun_game_id' => $akun->id,
+                'harga_final' => $akun->harga,
+                'status' => 'pending',
+            ]);
+
+            return Pembayaran::create([
+                'transaksi_akun_id' => $transaksi->id,
+                'kode_pembayaran' => 'PAY-'.strtoupper(Str::random(8)),
+                'metode' => $data['metode'],
+                'jumlah' => $akun->harga,
+                'status' => 'pending',
+            ]);
+        });
 
         return redirect()
             ->route('pembayaran.show', $pembayaran)

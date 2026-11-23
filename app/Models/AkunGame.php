@@ -31,6 +31,8 @@ class AkunGame extends Model
         return [
             'multiple_quantity' => 'boolean',
             'account_linked' => 'boolean',
+            'quantity' => 'integer',
+            'harga' => 'integer',
             'tags' => 'array',
             'gambar_tambahan' => 'array',
         ];
