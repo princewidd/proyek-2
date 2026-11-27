@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 
 class AkunGame extends Model
@@ -36,6 +37,28 @@ class AkunGame extends Model
             'tags' => 'array',
             'gambar_tambahan' => 'array',
         ];
+    }
+
+    protected function gambarUrl(): Attribute
+    {
+        return Attribute::get(fn () => self::urlGambar($this->gambar));
+    }
+
+    public static function urlGambar(?string $path): ?string
+    {
+        if ($path === null || $path === '') {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://') || str_starts_with($path, '//')) {
+            return $path;
+        }
+
+        if (str_starts_with($path, 'akun-game/')) {
+            return asset('storage/'.$path);
+        }
+
+        return asset($path);
     }
 
     public function titipJual()

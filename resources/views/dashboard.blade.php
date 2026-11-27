@@ -321,10 +321,8 @@
 
                                 <div class="w-14 h-12 sm:w-16 sm:h-14 rounded-lg overflow-hidden bg-[#2a3a5c] shrink-0">
 
-                                    @if ($listing->gambar)
-                                        <img src="{{ str_starts_with($listing->gambar, 'akun-game/')
-                                            ? asset('storage/' . $listing->gambar)
-                                            : asset($listing->gambar) }}"
+                                    @if ($listing->gambar_url)
+                                        <img src="{{ $listing->gambar_url }}"
                                             class="w-full h-full object-cover" alt="{{ $listing->judul }}">
                                     @else
                                         <div class="w-full h-full flex items-center justify-center">

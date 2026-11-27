@@ -151,8 +151,8 @@
             <section class="grid grid-cols-1 lg:grid-cols-[minmax(0,560px)_minmax(0,1fr)] gap-6 lg:gap-10 pb-10">
                 <!-- MEDIA -->
                 <div class="relative rounded-lg overflow-hidden bg-[#172038] aspect-[745/700] lg:mx-0 mx-auto w-full lg:w-auto max-w-[560px]">
-                    @if ($akunGame->gambar)
-                        <img src="{{ asset($akunGame->gambar) }}" alt="{{ $akunGame->judul }}" class="w-full h-full object-cover">
+                    @if ($akunGame->gambar_url)
+                        <img src="{{ $akunGame->gambar_url }}" alt="{{ $akunGame->judul }}" class="w-full h-full object-cover">
                     @else
                         <div class="w-full h-full flex items-center justify-center text-white/40 text-sm font-semibold">AKUN</div>
                     @endif
@@ -220,8 +220,8 @@
                 <!-- PRODUK -->
                 <div class="flex flex-col sm:flex-row items-start gap-4 sm:gap-7 border border-white rounded-xl p-4">
                     <div class="w-full sm:w-48 h-28 shrink-0 rounded bg-[#172038] overflow-hidden">
-                        @if ($akunGame->gambar)
-                            <img src="{{ asset($akunGame->gambar) }}" alt="" class="w-full h-full object-cover">
+                        @if ($akunGame->gambar_url)
+                            <img src="{{ $akunGame->gambar_url }}" alt="" class="w-full h-full object-cover">
                         @endif
                     </div>
                     <div class="flex-1 min-w-0">

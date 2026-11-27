@@ -183,8 +183,8 @@
                     @foreach ($akun as $a)
                         <a href="{{ route('game.akun.show', ['slug' => $slug, 'akun' => $a->id]) }}" class="group rounded-lg overflow-hidden bg-[#1e2a44] shadow hover:shadow-lg transition duration-200 flex flex-col">
                             <div class="aspect-video overflow-hidden bg-[#2a3a5c]">
-                                @if ($a->gambar)
-                                    <img src="{{ asset($a->gambar) }}" alt="{{ $a->judul }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
+                                @if ($a->gambar_url)
+                                    <img src="{{ $a->gambar_url }}" alt="{{ $a->judul }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center text-white/40 text-xs font-semibold">AKUN</div>
                                 @endif
